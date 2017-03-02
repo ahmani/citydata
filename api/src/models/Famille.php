@@ -16,5 +16,7 @@ Class Famille extends Model
 	{
 		return $this->hasMany('src\models\Service','id_famille');
 	}
-  
+
+
+
 }
