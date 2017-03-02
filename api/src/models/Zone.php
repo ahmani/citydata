@@ -11,10 +11,10 @@ Class Zone extends Model
 	protected  $primaryKey = "id" ;
 	public $timestamps =false;
 
-  //une zone à plusieurs services
+  //une zone a plusieurs services
 	public function services()
 	{
-		return $this->belongsToMany('src\models\Service','service_par_zone','id_service','id_zone');
+		return $this->belongsToMany('src\models\Service','service_par_zone','id_service','id_zone')->withPivot('nombre');
 	}
 
   //une zone a plusieurs familles
