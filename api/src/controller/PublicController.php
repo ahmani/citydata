@@ -2,9 +2,9 @@
 
 namespace app\controller;
 
-use \app\model\Famille;
-use \app\model\Service;
-use \app\model\Zone;
+use app\models\Famille;
+use app\models\Service;
+use app\models\Zone;
 
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -12,7 +12,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 
-class GameController extends AbstractController
+class PublicController extends AbstractController
 {
     public function getFamilles($req,$res,$args)
     {
