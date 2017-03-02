@@ -9,7 +9,15 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 
 
 $app->group('/familles', function (){
-      $this->get('', PublicController::class. ':getfamilles')->setName('listfamilles');
-       
+      $this->get('', PublicController::class. ':getFamilles')->setName('listfamilles');
+      $this->get('/{id}', PublicController::class. ':getFamilleById');
 });
 
+$app->group('/services', function (){
+      $this->get('', PublicController::class. ':getServices')->setName('listservices');
+      $this->get('/{id}', PublicController::class. ':getServiceById');
+});
+
+$app->group('/zones', function (){
+      $this->get('', PublicController::class. ':getZones')->setName('listzones');
+});
