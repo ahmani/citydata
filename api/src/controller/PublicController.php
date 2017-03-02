@@ -86,5 +86,20 @@ class PublicController extends AbstractController
     	}
     }
 
+        public function getZoneServices($req,$res,$args)
+        {
+        	try {
+
+    	        $zone = Zone::where("id", "=", $args["id"])->firstOrFail();
+    	        $services = $zone->services;
+    	        return $this->json_success($res, 200, $services);
+
+    	    } catch (ModelNotFoundException $e) {
+
+        		return $this->json_error($res, 404, "Not found");
+
+        	}
+        }
+
 
 }
