@@ -12,15 +12,15 @@ Class Service extends Model
 	public $timestamps =false;
 
   // un service peut appartenir a plusieurs zones
-	public function zones()
+	public function areas()
 	{
-		return $this->belongsToMany('src\models\Zone','service_par_zone','id_zone','id_service')->withPivot('nombre');
+		return $this->belongsToMany('src\models\Area','service_by_area','id_area','id_service')->withPivot('number');
 	}
 
 //un service appartient a une famille
-  public function famille()
+  public function family()
 	{
-		return $this->belongsTo('src\models\Famille','id_famille');
+		return $this->belongsTo('src\models\Family','id_family');
 	}
 
 }
