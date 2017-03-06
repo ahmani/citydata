@@ -5,9 +5,9 @@ namespace app\models;
 use Illuminate\Database\Eloquent\Model as Model;
 use Illuminate\Database\Capsule\Manager as DB;
 
-Class Donnees_geo extends Model
+Class Geographical_data extends Model
 {
-	protected  $table = "donnes_geo";
+	protected  $table = "geographical_data";
 	protected  $primaryKey = "id" ;
 	public $timestamps =false;
 
