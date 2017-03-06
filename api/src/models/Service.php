@@ -14,13 +14,13 @@ Class Service extends Model
   // un service peut appartenir a plusieurs zones
 	public function areas()
 	{
-		return $this->belongsToMany('src\models\Area','service_by_area','id_area','id_service')->withPivot('number');
+		return $this->belongsToMany('app\models\Area','service_by_area','id_area','id_service')->withPivot('number');
 	}
 
 //un service appartient a une famille
   public function family()
 	{
-		return $this->belongsTo('src\models\Family','id_family');
+		return $this->belongsTo('app\models\Family','id_family');
 	}
 
 }

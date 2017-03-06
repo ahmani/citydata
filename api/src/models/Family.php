@@ -9,7 +9,7 @@ Class Family extends Model
 {
 	protected  $table = "family";
 	protected  $primaryKey = "id" ;
-	public $timestamps =false;
+	public $timestamps = false;
 
   //une famille a plusieurs services
 	public function services()

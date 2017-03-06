@@ -16,56 +16,141 @@ class PublicController extends AbstractController
 {
     public function getFamilies($req,$res,$args)
     {
-        $families = Family::all();
-        return $this->json_success($res, 200, $families);
+    	try {
+
+        	$families = Family::all();
+        	return $this->json_success($res, 200, $families);
+
+    	} catch (ModelNotFoundException $e) {
+
+    		return $this->json_error($res, 404, "Not found");
+
+    	}
+
     }
 
     public function getFamilyById($req, $res,$args)
     {
-        $families = Family::where("id", "=", $args["id"])->firstOrFail();
-        return $this->json_success($res, 200, $families);
+
+    	try {
+
+    		$families = Family::where("id", "=", $args["id"])->firstOrFail();
+    		return $this->json_success($res, 200, $families);
+
+    	} catch (ModelNotFoundException $e) {
+
+    		return $this->json_error($res, 404, "Not found");
+
+    	}
+
     }
 
     public function getServices($req,$res,$args)
     {
-        $services = Service::all();
-        return $this->json_success($res, 200, $services);
+    	try {
+
+	        $services = Service::all();
+	        return $this->json_success($res, 200, $services);
+
+        } catch (ModelNotFoundException $e) {
+
+    		return $this->json_error($res, 404, "Not found");
+
+    	}
     }
 
     public function getServiceById($req, $res,$args)
     {
-        $services = Service::where("id", "=", $args["id"])->firstOrFail();
-        return $this->json_success($res, 200, $services);
+    	try {
+
+	        $services = Service::where("id", "=", $args["id"])->firstOrFail();
+	        return $this->json_success($res, 200, $services);
+
+        } catch (ModelNotFoundException $e) {
+
+        	return $this->json_error($res, 404, "Not found");
+
+        }
     }
 
     public function getAreas($req,$res,$args)
     {
-        $areas = Area::all();
-        return $this->json_success($res, 200, $areas);
+    	try {
+
+	        $areas = Area::all();
+	        return $this->json_success($res, 200, $areas);
+
+	    } catch (ModelNotFoundException $e) {
+
+    		return $this->json_error($res, 404, "Not found");
+
+    	}
     }
 
-    public function getServicesByFamily($req,$res,$args)
+    public function getServicesByArea($req,$res,$args)
+    // à revoir
     {
-        $services = Service::where("id_family", "=", $args["id"])->get();
-        //var_dump($services); die();
-        return $this->json_success($res, 200, $services);
-    }
+    	try {
 
-    public function getFamiliesByArea($req,$res,$args)
-    {
-        $services = Service::all();
-        $services = $services->areas();
+	        $area = Area::where("id", "=", $args["id"])->firstOrFail();
+	        $services = $area->services;
+          return $this->json_success($res, 200, $services);
 
-        //var_dump($services); die();
-        return $this->json_success($res, 200, $services);
+	    } catch (ModelNotFoundException $e) {
+
+    		return $this->json_error($res, 404, "Not found");
+
+    	}
     }
 
     public function getAreasByService($req,$res,$args)
     {
-        $service = Service::where("id", "=", $args["id"])->get();
-        $areas = $service->areas();
-
-        //var_dump($services); die();
+      try {
+        $service = Service::where("id", "=", $args["id"])->firstOrFail();
+        $areas = $service->areas;
         return $this->json_success($res, 200, $areas);
+
+      } catch (ModelNotFoundException $e) {
+
+        return $this->json_error($res, 404, "Not found");
+
+      }
     }
+
+    public function getServicesByFamily($req,$res,$args)
+    {
+      try {
+        $services = Service::where("id_family", "=", $args["id"])->firstOfFail();
+        return $this->json_success($res, 200, $services);
+
+      } catch (ModelNotFoundException $e) {
+
+        return $this->json_error($res, 404, "Not found");
+      }
+    }
+
+    public function getFamiliesByArea($req,$res,$args)
+    // à revoir
+    {
+      try {
+        $area = Area::where("id", "=", $args["id"])->firstOrFail();
+        $services = $area->services;
+
+        // $s = [];
+        // foreach($services as $service){
+        //   //$family = $service->family;
+        //   //$s = array("id" => $family->id);
+        //   array_push($s, $service->family);
+        //
+        // }
+        //var_dump($s); die();
+        return $this->json_success($res, 200, json_encode($services));
+
+      } catch (ModelNotFoundException $e) {
+
+        return $this->json_error($res, 404, "Not found");
+      }
+    }
+
+
 }

@@ -14,13 +14,8 @@ Class Area extends Model
   //une zone a plusieurs services
 	public function services()
 	{
-		return $this->belongsToMany('src\models\Service','service_by_area','id_service','id_area')->withPivot('number');
+		return $this->belongsToMany('app\models\Service','service_by_area','id_service','id_area')->withPivot('number');
 	}
 
-  //une zone a plusieurs familles
-  public function family()
-	{
-		return $this->hasMany('src\models\Family','id_area');
-	}
 
 }
