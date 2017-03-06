@@ -14,13 +14,13 @@ Class Zone extends Model
   //une zone a plusieurs services
 	public function services()
 	{
-		return $this->belongsToMany('src\models\Service','service_par_zone','id_service','id_zone')->withPivot('nombre');
+		return $this->belongsToMany('app\models\Service','service_par_zone','id_service','id_zone')->withPivot('nombre');
 	}
 
   //une zone a plusieurs familles
   public function familles()
 	{
-		return $this->hasMany('src\models\Famille','id_zone');
+		return $this->hasMany('app\models\Famille','id_zone');
 	}
 
 }

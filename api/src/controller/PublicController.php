@@ -16,33 +16,90 @@ class PublicController extends AbstractController
 {
     public function getFamilles($req,$res,$args)
     {
-        $familles = Famille::all();
-        return $this->json_success($res, 200, $familles);
+    	try {
+
+        	$familles = Famille::all();
+        	return $this->json_success($res, 200, $familles);
+
+    	} catch (ModelNotFoundException $e) {
+
+    		return $this->json_error($res, 404, "Not found");
+
+    	}
+        
     }
 
     public function getFamilleById($req, $res,$args)
     {
-        $familles = Famille::where("id", "=", $args["id"])->firstOrFail();
-        return $this->json_success($res, 200, $familles);
+    	try {
+
+    		$familles = Famille::where("id", "=", $args["id"])->firstOrFail();
+    		return $this->json_success($res, 200, $familles);
+
+    	} catch (ModelNotFoundException $e) {
+
+    		return $this->json_error($res, 404, "Not found");
+
+    	}
+        
     }
 
     public function getServices($req,$res,$args)
     {
-        $services = Service::all();
-        return $this->json_success($res, 200, $services);
+    	try {
+
+	        $services = Service::all();
+	        return $this->json_success($res, 200, $services);
+
+        } catch (ModelNotFoundException $e) {
+
+    		return $this->json_error($res, 404, "Not found");
+
+    	}
     }
 
     public function getServiceById($req, $res,$args)
     {
-        $services = Service::where("id", "=", $args["id"])->firstOrFail();
-        return $this->json_success($res, 200, $services);
+    	try {
+
+	        $services = Service::where("id", "=", $args["id"])->firstOrFail();
+	        return $this->json_success($res, 200, $services);
+
+        } catch (ModelNotFoundException $e) {
+
+        	return $this->json_error($res, 404, "Not found");
+
+        }
     }
 
     public function getZones($req,$res,$args)
     {
-        $zones = Zone::all();
-        return $this->json_success($res, 200, $zones);
+    	try {
+
+	        $zones = Zone::all();
+	        return $this->json_success($res, 200, $zones);
+
+	    } catch (ModelNotFoundException $e) {
+
+    		return $this->json_error($res, 404, "Not found");
+
+    	}
     }
+
+        public function getZoneServices($req,$res,$args)
+        {
+        	try {
+
+    	        $zone = Zone::where("id", "=", $args["id"])->firstOrFail();
+    	        $services = $zone->services;
+    	        return $this->json_success($res, 200, $services);
+
+    	    } catch (ModelNotFoundException $e) {
+
+        		return $this->json_error($res, 404, "Not found");
+
+        	}
+        }
 
 
 }
