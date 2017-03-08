@@ -8,19 +8,21 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 })->add('CORS');
 
 
-$app->group('/familles', function (){
-      $this->get('', PublicController::class. ':getFamilles')->setName('listfamilles');
-      $this->get('/{id}', PublicController::class. ':getFamilleById');
+$app->group('/families', function (){
+      $this->get('', PublicController::class. ':getFamilies')->setName('listFamilies');
+      $this->get('/{id}', PublicController::class. ':getFamilyById');
+      $this->get('/{id}/services', PublicController::class. ':getServicesByFamily');
 });
 
 $app->group('/services', function (){
-      $this->get('', PublicController::class. ':getServices')->setName('listservices');
+      $this->get('', PublicController::class. ':getServices')->setName('listServices');
       $this->get('/{id}', PublicController::class. ':getServiceById');
+      $this->get('/{id}/zones', PublicController::class. ':getAreasByService');
 });
 
-$app->group('/zones', function (){
-      $this->get('', PublicController::class. ':getZones')->setName('listzones');
-      $this->get('/{id}/services', PublicController::class. ':getZoneServices')->setName('listZoneServices');
+$app->group('/areas', function (){
+      $this->get('', PublicController::class. ':getAreas')->setName('listAreas');
+      $this->get('/{id}/services', PublicController::class. ':getServicesByArea')->setName('listServicesByArea');
+      $this->get('/{id}/families', PublicController::class. ':getFamiliesByArea')->setName('listFamiliesByArea');
       $this->get('/services/count', PublicController::class. ':getNumberServicesByZones')->setName('Numberserviceszones');
-      
 });

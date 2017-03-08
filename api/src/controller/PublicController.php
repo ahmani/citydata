@@ -2,9 +2,9 @@
 
 namespace app\controller;
 
-use app\models\Famille;
+use app\models\Family;
 use app\models\Service;
-use app\models\Zone;
+use app\models\Area;
 
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -14,34 +14,35 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class PublicController extends AbstractController
 {
-    public function getFamilles($req,$res,$args)
+    public function getFamilies($req,$res,$args)
     {
     	try {
 
-        	$familles = Famille::all();
-        	return $this->json_success($res, 200, $familles);
+        	$families = Family::all();
+        	return $this->json_success($res, 200, $families);
 
     	} catch (ModelNotFoundException $e) {
 
     		return $this->json_error($res, 404, "Not found");
 
     	}
-        
+
     }
 
-    public function getFamilleById($req, $res,$args)
+    public function getFamilyById($req, $res,$args)
     {
+
     	try {
 
-    		$familles = Famille::where("id", "=", $args["id"])->firstOrFail();
-    		return $this->json_success($res, 200, $familles);
+    		$families = Family::where("id", "=", $args["id"])->firstOrFail();
+    		return $this->json_success($res, 200, $families);
 
     	} catch (ModelNotFoundException $e) {
 
     		return $this->json_error($res, 404, "Not found");
 
     	}
-        
+
     }
 
     public function getServices($req,$res,$args)
@@ -72,12 +73,12 @@ class PublicController extends AbstractController
         }
     }
 
-    public function getZones($req,$res,$args)
+    public function getAreas($req,$res,$args)
     {
     	try {
 
-	        $zones = Zone::all();
-	        return $this->json_success($res, 200, $zones);
+	        $areas = Area::all();
+	        return $this->json_success($res, 200, $areas);
 
 	    } catch (ModelNotFoundException $e) {
 
@@ -86,20 +87,70 @@ class PublicController extends AbstractController
     	}
     }
 
-        public function getZoneServices($req,$res,$args)
-        {
-        	try {
+    public function getServicesByArea($req,$res,$args)
+    // à revoir
+    {
+    	try {
 
-    	        $zone = Zone::where("id", "=", $args["id"])->firstOrFail();
-    	        $services = $zone->services;
-    	        return $this->json_success($res, 200, $services);
+	        $area = Area::where("id", "=", $args["id"])->firstOrFail();
+	        $services = $area->services;
+          return $this->json_success($res, 200, $services);
 
-    	    } catch (ModelNotFoundException $e) {
+	    } catch (ModelNotFoundException $e) {
 
-        		return $this->json_error($res, 404, "Not found");
+    		return $this->json_error($res, 404, "Not found");
 
-        	}
-        }
+    	}
+    }
+
+    public function getAreasByService($req,$res,$args)
+    {
+      try {
+        $service = Service::where("id", "=", $args["id"])->firstOrFail();
+        $areas = $service->areas;
+        return $this->json_success($res, 200, $areas);
+
+      } catch (ModelNotFoundException $e) {
+
+        return $this->json_error($res, 404, "Not found");
+
+      }
+    }
+
+    public function getServicesByFamily($req,$res,$args)
+    {
+      try {
+        $services = Service::where("id_family", "=", $args["id"])->firstOfFail();
+        return $this->json_success($res, 200, $services);
+
+      } catch (ModelNotFoundException $e) {
+
+        return $this->json_error($res, 404, "Not found");
+      }
+    }
+
+    public function getFamiliesByArea($req,$res,$args)
+    // à revoir
+    {
+      try {
+        $area = Area::where("id", "=", $args["id"])->firstOrFail();
+        $services = $area->services;
+
+        // $s = [];
+        // foreach($services as $service){
+        //   //$family = $service->family;
+        //   //$s = array("id" => $family->id);
+        //   array_push($s, $service->family);
+        //
+        // }
+        //var_dump($s); die();
+        return $this->json_success($res, 200, json_encode($services));
+
+      } catch (ModelNotFoundException $e) {
+
+        return $this->json_error($res, 404, "Not found");
+      }
+    }
 
 		public function getNumberServicesByZones($req, $res, $args)
 		{  
