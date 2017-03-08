@@ -101,5 +101,26 @@ class PublicController extends AbstractController
         	}
         }
 
+		public function getNumberServicesByZones($req, $res, $args)
+		{  
+			try {
+    	        $zones = Zone::all();
+				
+				//$zone->services->count() 
+				foreach($zones as $zone)
+				{
+					
+							$zones_by_services[] = array("code" => $zone->code ,
+									"nombre" => $zone->services->count) ;
+						
+				}
+    	    	return $this->json_success($res, 200, json_encode($zones_by_services));
+
+    	    } catch (ModelNotFoundException $e) {
+
+        		return $this->json_error($res, 404, "Not found");
+        	}
+		}
+
 
 }

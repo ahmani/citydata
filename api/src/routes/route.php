@@ -21,4 +21,6 @@ $app->group('/services', function (){
 $app->group('/zones', function (){
       $this->get('', PublicController::class. ':getZones')->setName('listzones');
       $this->get('/{id}/services', PublicController::class. ':getZoneServices')->setName('listZoneServices');
+      $this->get('/services/count', PublicController::class. ':getNumberServicesByZones')->setName('Numberserviceszones');
+      
 });

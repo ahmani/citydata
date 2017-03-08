@@ -1,0 +1,70 @@
+/**Typography**/
+@font-face {
+  font-family: Roboto;
+  src: url(../assets/roboto.ttf); }
+@font-face {
+  font-family: Lobster;
+  src: url(../assets/lobster.otf); }
+@font-face {
+  font-family: Roboto-thin;
+  src: url(../assets/roboto-thin.ttf); }
+/************/
+body {
+  background-color: #FAFAFA;
+  font-family: "Roboto"; }
+
+.navbar {
+  color: #FAFAFA;
+  border-radius: 0; }
+
+label {
+  font-weight: lighter; }
+
+a {
+  color: white !important;
+  text-decoration: none !important; }
+
+h1 {
+  font-family: "Lobster"; }
+
+/****Tableau des scores*****/
+.ranks table {
+  background-color: white;
+  color: #29353a;
+  text-align: center;
+  border-radius: 3px 3px 3px 3px; }
+
+.ranks tr, .ranks th {
+  text-align: center; }
+
+.ranks input {
+  border-radius: 0px; }
+
+.ranks {
+  margin-top: 20px; }
+
+/*************************/
+.infosJeu {
+  background-color: white;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #29353a;
+  border-radius: 10px;
+  border: 1px solid #29353a;
+  min-height: 200px;
+  margin-top: 10px; }
+
+p {
+  font-family: "Roboto-thin";
+  font-weight: bolder; }
+
+.infosJeu span, #clues span {
+  font-family: "Roboto"; }
+
+.leaflet-control-zoom-in, .leaflet-control-zoom-out {
+  background-color: #29353a !important; }
+
+#creerGame {
+  margin-top: 15px; }
+
+/*# sourceMappingURL=styles.css.map */
