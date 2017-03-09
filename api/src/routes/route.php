@@ -17,7 +17,7 @@ $app->group('/families', function (){
 $app->group('/services', function (){
       $this->get('', PublicController::class. ':getServices')->setName('listServices');
       $this->get('/{id}', PublicController::class. ':getServiceById');
-      $this->get('/{id}/zones', PublicController::class. ':getAreasByService');
+      $this->get('/{id}/areas', PublicController::class. ':getAreasByService');
 });
 
 $app->group('/areas', function (){

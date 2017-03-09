@@ -93,7 +93,8 @@ class PublicController extends AbstractController
     	try {
 
 	        $area = Area::where("id", "=", $args["id"])->firstOrFail();
-	        $services = $area->services;
+          $services = $area->services;
+
           return $this->json_success($res, 200, $services);
 
 	    } catch (ModelNotFoundException $e) {
@@ -136,15 +137,14 @@ class PublicController extends AbstractController
         $area = Area::where("id", "=", $args["id"])->firstOrFail();
         $services = $area->services;
 
-        // $s = [];
-        // foreach($services as $service){
-        //   //$family = $service->family;
-        //   //$s = array("id" => $family->id);
-        //   array_push($s, $service->family);
-        //
-        // }
+        $s = [];
+        foreach($services as $service){
+          array_push($s, $service->family);
+        }
+        $s = array_unique($s);
+
         //var_dump($s); die();
-        return $this->json_success($res, 200, json_encode($services));
+        return $this->json_success($res, 200, json_encode($s));
 
       } catch (ModelNotFoundException $e) {
 
