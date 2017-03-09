@@ -1,6 +1,7 @@
 <?php
 
 use app\controller\PublicController;
+use app\controller\PrivateController;
 
 
 $app->options('/{routes:.+}', function ($request, $response, $args) {
@@ -18,10 +19,14 @@ $app->group('/services', function (){
       $this->get('', PublicController::class. ':getServices')->setName('listServices');
       $this->get('/{id}', PublicController::class. ':getServiceById');
       $this->get('/{id}/areas', PublicController::class. ':getAreasByService');
+      $this->get('/{id}/information', PublicController::class. ':getInformationByService')->setName('informationByService');
+      $this->get('/{id}/coordinates', PublicController::class. ':getCoordinatesByService')->setName('coordinatesByService');
+      $this->post('', PrivateController::class. ':addServices')->setName('addNewServices');
 });
 
 $app->group('/areas', function (){
       $this->get('', PublicController::class. ':getAreas')->setName('listAreas');
       $this->get('/{id}/services', PublicController::class. ':getServicesByArea')->setName('listServicesByArea');
-      $this->get('/{id}/families', PublicController::class. ':getFamiliesByArea')->setName('listFamiliesByArea');;
+      $this->get('/{id}/families', PublicController::class. ':getFamiliesByArea')->setName('listFamiliesByArea');
+      $this->get('/{id}/information', PublicController::class. ':getInformationByArea')->setName('informationByArea');
 });

@@ -14,6 +14,8 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class PublicController extends AbstractController
 {
+
+    //get the list of the families
     public function getFamilies($req,$res,$args)
     {
     	try {
@@ -29,6 +31,8 @@ class PublicController extends AbstractController
 
     }
 
+
+    //get a family by its id
     public function getFamilyById($req, $res,$args)
     {
 
@@ -45,6 +49,8 @@ class PublicController extends AbstractController
 
     }
 
+
+    //get the list of the services
     public function getServices($req,$res,$args)
     {
     	try {
@@ -59,6 +65,8 @@ class PublicController extends AbstractController
     	}
     }
 
+
+    //get a service by its id
     public function getServiceById($req, $res,$args)
     {
     	try {
@@ -73,6 +81,8 @@ class PublicController extends AbstractController
         }
     }
 
+
+    //get the list of the areas
     public function getAreas($req,$res,$args)
     {
     	try {
@@ -87,6 +97,8 @@ class PublicController extends AbstractController
     	}
     }
 
+
+    //get the services of an area
     public function getServicesByArea($req,$res,$args)
     // à revoir
     {
@@ -104,6 +116,8 @@ class PublicController extends AbstractController
     	}
     }
 
+
+    //get the area of a specific service
     public function getAreasByService($req,$res,$args)
     {
       try {
@@ -118,6 +132,8 @@ class PublicController extends AbstractController
       }
     }
 
+
+    //get the services of a family
     public function getServicesByFamily($req,$res,$args)
     {
       try {
@@ -130,6 +146,8 @@ class PublicController extends AbstractController
       }
     }
 
+
+    //get the families of an area
     public function getFamiliesByArea($req,$res,$args)
     // à revoir
     {
@@ -152,5 +170,43 @@ class PublicController extends AbstractController
       }
     }
 
+    // get all the information of an area
+      public function getInformationByArea($req,$res,$args){
+        try{
+          $areas = area::where("id", "=", $args["id"])->firstOrFail();
+          foreach($areas as $value){
+            $information = $areas->information;
+            return $this->json_success($res, 200, json_encode(array("information" => $information)));
+          }
+        }catch (ModelNotFoundException $e) {
+            return $this->json_error($res, 404, "Not found");
+        }
+      }
+
+    //get all information of a service
+    public function getInformationByService($req,$res,$args){
+      try{
+        $services = Service::where("id", "=", $args["id"])->firstOrFail();
+        foreach($services as $value){
+          $information = $services->information;
+          return $this->json_success($res, 200, json_encode(array("information" => $information)));
+        }
+      }catch(ModelNotFoundException $e){
+        return $this->json_error($res, 404, "Not found");
+      }
+    }
+
+    /*//get the coordinates of a service
+    public function getCoordinatesByService($req,$res,$args){
+      try{
+        $services = Service::where("id", "=", $args["id"])->firstOrFail();
+        foreach($services as $value){
+          $coordinates = array("latitude"=>$services->latitude, "longitude"=>$services->longitude);
+          return $this->json_success($res, 200, $coordinates);
+        }
+      }catch(ModelNotFoundException $e){
+        return $this->json_error($res, 404, "Not found");
+      }
+    }*/
 
 }
