@@ -22,6 +22,8 @@ $app->group('/services', function (){
       $this->get('/{id}/information', PublicController::class. ':getInformationByService')->setName('informationByService');
       $this->get('/{id}/coordinates', PublicController::class. ':getCoordinatesByService')->setName('coordinatesByService');
       $this->post('', PrivateController::class. ':addServices')->setName('addNewServices');
+      $this->put('/{id}', PrivateController::class. ':modifyServices')->setName('modifyServices');
+      $this->delete('/{id}', PrivateController::class. ':deleteServices')->setName('deleteServices');
 });
 
 $app->group('/areas', function (){
