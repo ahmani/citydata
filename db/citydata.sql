@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS `area` (
 -- Contenu de la table `area`
 --
 
-INSERT INTO `area` (`id`, `code`, `libelle`) VALUES
-(1, '543950101', 'Haut-du-Lievre Nord Gentilly'),
+INSERT INTO `area` (`id`, `code`, `libelle`, `information`) VALUES
+(1, '543950101', 'Haut-du-Lievre Nord Gentilly', 'un beau lieu'),
 (2, '543950102', 'Haut-du-Lievre Tamaris Tilleul Argente'),
 (3, '543950103', 'Haut-du-Lievre Blanc Sycomore'),
 (4, '543950201', 'Cure d''Air'),
@@ -155,8 +155,8 @@ CREATE TABLE IF NOT EXISTS `service` (
 -- Contenu de la table `service`
 --
 
-INSERT INTO `service` (`id`, `title`, `id_family`) VALUES
-(1, 'Hypermarché', 0),
+INSERT INTO `service` (`id`, `title`, `id_family`, `information`) VALUES
+(1, 'Hypermarché', 0,'pour faire mes courses'),
 (2, 'Supermarché', 0),
 (3, 'Grande surface de bricolage', 0),
 (4, 'Supérette', 0),
