@@ -14,6 +14,8 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class PublicController extends AbstractController
 {
+
+    //get the list of the families
     public function getFamilies($req,$res,$args)
     {
     	try {
@@ -29,6 +31,8 @@ class PublicController extends AbstractController
 
     }
 
+
+    //get a family by its id
     public function getFamilyById($req, $res,$args)
     {
 
@@ -45,6 +49,8 @@ class PublicController extends AbstractController
 
     }
 
+
+    //get the list of the services
     public function getServices($req,$res,$args)
     {
     	try {
@@ -59,6 +65,8 @@ class PublicController extends AbstractController
     	}
     }
 
+
+    //get a service by its id
     public function getServiceById($req, $res,$args)
     {
     	try {
@@ -73,6 +81,8 @@ class PublicController extends AbstractController
         }
     }
 
+
+    //get the list of the areas
     public function getAreas($req,$res,$args)
     {
     	try {
@@ -87,6 +97,8 @@ class PublicController extends AbstractController
     	}
     }
 
+
+    //get the services of an area
     public function getServicesByArea($req,$res,$args)
     // à revoir
     {
@@ -103,6 +115,8 @@ class PublicController extends AbstractController
     	}
     }
 
+
+    //get the area of a specific service
     public function getAreasByService($req,$res,$args)
     {
       try {
@@ -117,6 +131,8 @@ class PublicController extends AbstractController
       }
     }
 
+
+    //get the services of a family
     public function getServicesByFamily($req,$res,$args)
     {
       try {
@@ -129,6 +145,8 @@ class PublicController extends AbstractController
       }
     }
 
+
+    //get the families of an area
     public function getFamiliesByArea($req,$res,$args)
     // à revoir
     {
@@ -152,7 +170,7 @@ class PublicController extends AbstractController
       }
     }
 
-    // get all the information of a given area
+    // get all the information of an area
       public function getInformationByArea($req,$res,$args){
         try{
           $areas = area::where("id", "=", $args["id"])->firstOrFail();
@@ -165,7 +183,7 @@ class PublicController extends AbstractController
         }
       }
 
-    //get all information of a given service
+    //get all information of a service
     public function getInformationByService($req,$res,$args){
       try{
         $services = Service::where("id", "=", $args["id"])->firstOrFail();
@@ -178,7 +196,7 @@ class PublicController extends AbstractController
       }
     }
 
-    /*//get the coordinates of a given service
+    /*//get the coordinates of a service
     public function getCoordinatesByService($req,$res,$args){
       try{
         $services = Service::where("id", "=", $args["id"])->firstOrFail();

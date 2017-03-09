@@ -1,6 +1,7 @@
 <?php
 
 use app\controller\PublicController;
+use app\controller\PrivateController;
 
 
 $app->options('/{routes:.+}', function ($request, $response, $args) {
@@ -20,6 +21,7 @@ $app->group('/services', function (){
       $this->get('/{id}/areas', PublicController::class. ':getAreasByService');
       $this->get('/{id}/information', PublicController::class. ':getInformationByService')->setName('informationByService');
       $this->get('/{id}/coordinates', PublicController::class. ':getCoordinatesByService')->setName('coordinatesByService');
+      $this->post('', PrivateController::class. ':addServices')->setName('addNewServices');
 });
 
 $app->group('/areas', function (){
