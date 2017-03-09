@@ -17,5 +17,5 @@ Class Area extends Model
 		return $this->belongsToMany('app\models\Service','service_by_area','id_service','id_area')->withPivot('number');
 	}
 
-
+	
 }
