@@ -30,6 +30,5 @@ class PrivateController extends AbstractController
     }
     return $res;
   }
-  }
 
 }
