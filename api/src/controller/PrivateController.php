@@ -31,4 +31,21 @@ class PrivateController extends AbstractController
     return $res;
   }
 
+  //delete a family from the database
+  public function deleteFamily($req,$res,$args){
+
+    $id = $args['id'];
+
+    //$response = $response->withHeader('Content-Type:', 'application/json;charset=utf8');
+
+    //Vérification de l'existance de la ressource
+    try {
+      $f = Family::findOrFail($id);
+    } Catch (ModelNotFoundException $e) {
+      return $this->json_error($res, 404, "Not found");
+    }
+
+
+  }
+
 }

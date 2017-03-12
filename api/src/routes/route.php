@@ -30,3 +30,8 @@ $app->group('/areas', function (){
       $this->get('/{id}/families', PublicController::class. ':getFamiliesByArea')->setName('listFamiliesByArea');
       $this->get('/{id}/information', PublicController::class. ':getInformationByArea')->setName('informationByArea');
 });
+
+
+$app->group('/admin', function (){
+      $this->delete('/families/{id}', PrivateController::class. ':deleteFamily')->setName('removeFamily');
+});
