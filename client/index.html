@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>Citydata</title>
         <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
         <style>
@@ -30,16 +30,36 @@
 <body> 
 
     <ng-controller ng-controller="DataController"id='data' data-ng-init="init()">
-       <leaflet lf-center="center" legend="legend" defaults="defaults" event-broadcast="events" height={{height}} width={{width}} center="center" geojson="geojson" markers="markers" paths="paths" tiles="tiles"></leaflet>
+       <leaflet lf-center="center" legend="legend" defaults="defaults" event-broadcast="events" height={{height}} width={{width}} center="center" geojson="geojson" markers="markers" paths="paths" tiles="tiles" ></leaflet>
     </ng-controller>
 </body>
+<script type="text/ng-template" id="ZoneInfoModal.html">
+    <div class="modal-header">
+        <button type="button" class="close"  ng-click="cancel()">&times;</button>
+        <h4 class="modal-title text-center">{{item}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-lg-push-2 col-sm-push-2 col-lg-8 col-sm-8">
+                <form role="form" id="destForm" ng-submit="process()" class="form-horizontal">
+                    <fieldset>
+                        {{leafletPayload.leafletObject.feature.properties.name}}
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</script>
         <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/angular-animate/angular-animate.min.js"></script>
         <script src="bower_components/leaflet/dist/leaflet.js"></script>
         <script src="lib/angular-leaflet-directive.min.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="app/app.js"></script>
         <script src="app/controller/data_controller.js"></script>
         <script src="app/factory/zones_factory.js"></script>
+        <script src="app/factory/public_areas_factory.js"></script>
         <script src="bower_components/moment/min/moment.min.js"></script>
         <script src="bower_components/moment/min/locales.min.js"></script>
         <script src="bower_components/humanize-duration/humanize-duration.js"></script>

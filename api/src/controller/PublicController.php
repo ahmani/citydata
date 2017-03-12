@@ -10,6 +10,7 @@ use app\models\Area;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use \Illuminate\Database\Capsule\Manager as DB;
 
 
 class PublicController extends AbstractController
@@ -152,20 +153,22 @@ class PublicController extends AbstractController
       }
     }
 
-		public function getNumberServicesByZones($req, $res, $args)
+		public function getNumberServicesByAreas($req, $res, $args)
 		{  
 			try {
-    	        $zones = Zone::all();
-				
-				//$zone->services->count() 
-				foreach($zones as $zone)
-				{
-					
-							$zones_by_services[] = array("code" => $zone->code ,
-									"nombre" => $zone->services->count) ;
-						
-				}
-    	    	return $this->json_success($res, 200, json_encode($zones_by_services));
+    	      $areas = Area::all();
+            foreach($areas as $area)
+            {
+              foreach($area->servicesCount as $service)
+              {
+                if($service->countservices != 0)
+                {
+                  $areas_by_services[] = array("code" => str_split($area->code, 5)[1] ,
+                      "nombre" => $service->countservices) ;
+                }
+              }						
+            }
+    	    	return $this->json_success($res, 200, json_encode($areas_by_services));
 
     	    } catch (ModelNotFoundException $e) {
 

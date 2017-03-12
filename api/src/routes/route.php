@@ -24,5 +24,5 @@ $app->group('/areas', function (){
       $this->get('', PublicController::class. ':getAreas')->setName('listAreas');
       $this->get('/{id}/services', PublicController::class. ':getServicesByArea')->setName('listServicesByArea');
       $this->get('/{id}/families', PublicController::class. ':getFamiliesByArea')->setName('listFamiliesByArea');
-      $this->get('/services/count', PublicController::class. ':getNumberServicesByZones')->setName('Numberserviceszones');
+      $this->get('/services/count', PublicController::class. ':getNumberServicesByAreas')->setName('Numberservicesareas');
 });
