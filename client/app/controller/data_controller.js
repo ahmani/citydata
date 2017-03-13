@@ -1,8 +1,5 @@
-angular.module('app').controller('DataController',['$scope', '$http', 'ZoneFactory','PublicAreasFactory','$uibModal', 
-
-  function($scope, $http, ZoneFactory, PublicAreasFactory, $uibModal) {
-
-    $scope.currentIris = '';
+angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'ZoneFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 
+                function($rootScope,$scope, $http, ZoneFactory, PublicAreasFactory, $uibModal, ServicesFactory) {
 
     angular.extend($scope, {
       height: 500,
@@ -13,19 +10,19 @@ angular.module('app').controller('DataController',['$scope', '$http', 'ZoneFacto
             zoom: 13
       },
       legend: {
-        position: 'bottomleft',
-        colors: [ 'yellow', 'orange', 'red' ],
-        labels: [ 'Densité minimale', 'Densité moyenne', 'Densité forte' ]
+            position: 'bottomleft',
+            colors: [ 'yellow', 'orange', 'red' ],
+            labels: [ 'Densité minimale', 'Densité moyenne', 'Densité forte' ]
       },
       defaults: {
-        doubleClickZoom: false,
-        scrollWheelZoom: true
+            doubleClickZoom: false,
+            scrollWheelZoom: true
       },
       events: {
-        map: {
-          enable: ['click'],
-          logic: 'emit'
-        }
+            map: {
+            enable: ['click'],
+            logic: 'emit'
+            }
       },
       tiles: {
         url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
@@ -56,16 +53,19 @@ angular.module('app').controller('DataController',['$scope', '$http', 'ZoneFacto
     });
     
     $scope.$on("leafletDirectiveGeoJson.click", function(ev, leafletPayload) {
-        var template = getModal();
-        $scope.currentIris = leafletPayload.leafletObject.feature.properties.name;
-        $uibModal.open(template); 
-          
+        clickArea(leafletPayload.leafletObject.feature)
     });
 
-    console.log($scope.currentIris)
-
-
-
+    var clickArea = function(area)
+    {
+        var template = getModal();
+         $rootScope.area = area.properties.id_area
+         $uibModal.open(template);
+         ServicesFactory.ServicesByArea($rootScope.area).then (function (response) {
+            $rootScope.services = response.data
+         });
+    }
+  
     var getColor = function(number){
       switch(number) {
         case 5:
@@ -126,7 +126,8 @@ angular.module('app').controller('DataController',['$scope', '$http', 'ZoneFacto
                           "type": "Feature",
                           "properties": {
                             "name" : record.fields.iris,
-                            "number" : area.nombre
+                            "number" : area.nombre,
+                            "id_area" : area.id_area
                           },
                           "geometry": {
                             "type": "Polygon",

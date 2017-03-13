@@ -43,7 +43,7 @@
             <div class="col-lg-push-2 col-sm-push-2 col-lg-8 col-sm-8">
                 <form role="form" id="destForm" ng-submit="process()" class="form-horizontal">
                     <fieldset>
-                        {{leafletPayload.leafletObject.feature.properties.name}}
+                        <div ng-repeat="service in services">{{service.title}} : {{service.pivot.number}}</div>
                     </fieldset>
                 </form>
             </div>
@@ -59,6 +59,7 @@
         <script src="app/app.js"></script>
         <script src="app/controller/data_controller.js"></script>
         <script src="app/factory/zones_factory.js"></script>
+        <script src="app/factory/area_services_factory.js"></script>
         <script src="app/factory/public_areas_factory.js"></script>
         <script src="bower_components/moment/min/moment.min.js"></script>
         <script src="bower_components/moment/min/locales.min.js"></script>

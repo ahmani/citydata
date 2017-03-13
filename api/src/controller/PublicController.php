@@ -181,8 +181,9 @@ class PublicController extends AbstractController
               {
                 if($service->countservices != 0)
                 {
-                  $areas_by_services[] = array("code" => str_split($area->code, 5)[1] ,
-                      "nombre" => $service->countservices) ;
+                  $areas_by_services[] = array("id_area" => $area->id ,
+                                              "code" => str_split($area->code, 5)[1] ,
+                                              "nombre" => $service->countservices) ;
                 }
               }						
             }
