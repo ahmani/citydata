@@ -1,5 +1,5 @@
-angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'ZoneFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 
-                function($rootScope,$scope, $http, ZoneFactory, PublicAreasFactory, $uibModal, ServicesFactory) {
+angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 
+                function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory) {
 
     angular.extend($scope, {
       height: 500,
@@ -36,7 +36,12 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                 size: 'md'
             }
     };
-
+    $http.get('http://localhost/citydata/api/rest/families').then(function(response) {
+        $scope.familiesList = [];
+        response.data.forEach(function(data) {
+          $scope.familiesList.push(data);
+        });
+    });
     // Mouse over function, called from the Leaflet Map Events
     var countryMouseover = function (feature, leafletEvent) {
         var layer = leafletEvent.target;
@@ -106,19 +111,29 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
 
     var areas = new Array;
 
-    ZoneFactory.all().then(function (response) {
-            areas = response.data;
-        }, function (error) {
-            console.log(error);
-    });  
+    $scope.selected = {
+            families: []
+    };
 
+      $scope.changeFamilies = function() {
+        AreaFactory.all(JSON.stringify($scope.selected.families)).then(function (response) {
+                areas = response.data;
+                $scope.init()
+                console.log(areas)
+            }, function (error) {
+                console.log(error);
+        });  
+     };
     $scope.init = function() {
 
+
+        //call the factory one time, put data in Array
         PublicAreasFactory.all().then (function (response) {
       
         var features = new Array;
         
         response.data.records.forEach (function (record) {
+            if(areas.length > 0){
             areas.forEach( function (area) {
               if (area.code == record.fields.iris){
                     if(record.fields.geo_shape.coordinates.length == 1){
@@ -137,6 +152,8 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                   }
               }
             });
+
+        }
         });
 
         var data = {
@@ -146,6 +163,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
 
 
         $scope.geojson = createGeoJsonObject(data);
+        console.log($scope.geojson)
 
 
        //console.log($scope.geojson.data);
