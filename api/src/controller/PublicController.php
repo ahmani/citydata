@@ -147,6 +147,31 @@ class PublicController extends AbstractController
     }
 
 
+    //get the services of a family
+    public function getServicesByFamilies($req,$res,$args)
+    {
+      //echo $req->getParsedBody()[1]["description"]; die();
+
+      $areas = [];
+      foreach ($req->getParsedBody() as $p){
+      //  echo $p["id"];
+        try {
+          $services = Service::where("id_family", "=", $p["id"])->get();
+          foreach ($services as $service){
+            array_push($areas, $service->areas);
+          }
+
+        } catch (ModelNotFoundException $e) {
+
+          return $this->json_error($res, 404, "Not found");
+        }
+      }
+      //var_dump($services); die();
+      return $this->json_success($res, 200, json_encode($areas));
+
+    }
+
+
     //get the families of an area
     public function getFamiliesByArea($req,$res,$args)
     // à revoir

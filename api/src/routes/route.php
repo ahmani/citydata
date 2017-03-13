@@ -13,6 +13,7 @@ $app->group('/families', function (){
       $this->get('', PublicController::class. ':getFamilies')->setName('listFamilies');
       $this->get('/{id}', PublicController::class. ':getFamilyById');
       $this->get('/{id}/services', PublicController::class. ':getServicesByFamily');
+      $this->post('/services', PublicController::class. ':getServicesByFamilies');
 });
 
 $app->group('/services', function (){
@@ -22,6 +23,8 @@ $app->group('/services', function (){
       $this->get('/{id}/information', PublicController::class. ':getInformationByService')->setName('informationByService');
       $this->get('/{id}/coordinates', PublicController::class. ':getCoordinatesByService')->setName('coordinatesByService');
       $this->post('', PrivateController::class. ':addServices')->setName('addNewServices');
+      $this->put('/{id}', PrivateController::class. ':modifyServices')->setName('modifyServices');
+      $this->delete('/{id}', PrivateController::class. ':deleteServices')->setName('deleteServices');
 });
 
 $app->group('/areas', function (){
