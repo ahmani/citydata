@@ -1,33 +1,11 @@
-angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 
-                function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory) {
-
-    angular.extend($scope, {
-      height: 500,
-      width: 900,
-      center: {
-            lat: 48.69,
-            lng: 6.182,
-            zoom: 13
-      },
-      legend: {
-            position: 'bottomleft',
-            colors: [ 'yellow', 'orange', 'red' ],
-            labels: [ 'Densité minimale', 'Densité moyenne', 'Densité forte' ]
-      },
-      defaults: {
-            doubleClickZoom: false,
-            scrollWheelZoom: true
-      },
-      events: {
-            map: {
-            enable: ['click'],
-            logic: 'emit'
-            }
-      },
-      tiles: {
-        url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-      }
-    });
+angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 'DataFactory', 'FamiliesFactory',
+                function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory, DataFactory, FamiliesFactory) {
+                
+                $scope.markers = [];
+                areas =[];
+                $scope.selected = {
+                     families: []
+                };
 
     var getModal = function () {
             return {
@@ -36,12 +14,16 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                 size: 'md'
             }
     };
-    $http.get('http://localhost/citydata/api/rest/families').then(function(response) {
-        $scope.familiesList = [];
-        response.data.forEach(function(data) {
-          $scope.familiesList.push(data);
+    var getFamilies = function()
+    {
+        FamiliesFactory.all().then(function(response) {
+            $scope.familiesList = [];
+            response.data.forEach(function(data) {
+            $scope.familiesList.push(data);
+            });
         });
-    });
+    }
+    
     // Mouse over function, called from the Leaflet Map Events
     var countryMouseover = function (feature, leafletEvent) {
         var layer = leafletEvent.target;
@@ -109,13 +91,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
              };
     };
 
-    var areas = new Array;
-
-    $scope.selected = {
-            families: []
-    };
-
-      $scope.changeFamilies = function() {
+    $scope.changeFamilies = function() {
         AreaFactory.all(JSON.stringify($scope.selected.families)).then(function (response) {
                 areas = response.data;
                 $scope.init()
@@ -123,10 +99,27 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
             }, function (error) {
                 console.log(error);
         });  
-     };
+    };
+
+    var Getmarkers = function()
+    {
+        DataFactory.all().then(function(response){
+            response.data.forEach( function (d) {
+                $scope.markers.push({
+                    lat: parseFloat(d.latitude),
+                    lng: parseFloat(d.longitude),
+                    icon : {
+                                iconUrl: 'https://lh4.ggpht.com/Tr5sntMif9qOPrKV_UVl7K8A_V3xQDgA7Sw_qweLUFlg76d_vGFA7q1xIKZ6IcmeGqg=w300',
+                                iconSize:     [60, 60],
+                            }
+                });
+            });
+        });
+    }
+
     $scope.init = function() {
-
-
+        getFamilies();
+        Getmarkers();
         //call the factory one time, put data in Array
         PublicAreasFactory.all().then (function (response) {
       
@@ -161,20 +154,43 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
            "features": features
         };
 
-
         $scope.geojson = createGeoJsonObject(data);
-        console.log($scope.geojson)
-
-
-       //console.log($scope.geojson.data);
-
-
       },
       function (error) {
        console.log(error);
       });
     }
 
+
+    angular.extend($scope, {
+      height: 500,
+      width: 900,
+      center: {
+            lat: 48.69,
+            lng: 6.182,
+            zoom: 13
+      },
+      legend: {
+            position: 'bottomleft',
+            colors: [ 'yellow', 'orange', 'red' ],
+            labels: [ 'Densité minimale', 'Densité moyenne', 'Densité forte' ]
+      },
+      defaults: {
+            doubleClickZoom: false,
+            scrollWheelZoom: true
+      },
+      events: {
+            map: {
+            enable: ['click'],
+            logic: 'emit'
+            }
+      },
+      tiles: {
+        url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+      }
+    });
+
+    $scope.init();
 
   }
 ]);

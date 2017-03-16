@@ -34,3 +34,7 @@ $app->group('/areas', function (){
       $this->get('/services/count', PublicController::class. ':getNumberServicesByAreas')->setName('Numberservicesareas');
       $this->get('/{id}/information', PublicController::class. ':getInformationByArea')->setName('informationByArea');
 });
+
+$app->group('/data', function (){
+      $this->get('', PublicController::class. ':getGeographicalData')->setName('ListGeographicalData');
+});
