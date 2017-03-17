@@ -1,4 +1,4 @@
-angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'ZoneFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 
+angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'ZoneFactory','PublicAreasFactory','$uibModal', 'ServicesFactory',
                 function($rootScope,$scope, $http, ZoneFactory, PublicAreasFactory, $uibModal, ServicesFactory) {
 
     angular.extend($scope, {
@@ -37,6 +37,15 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
             }
     };
 
+    // get the modal window containing the form which permits to add points on the map and DB
+    var getModalForm = function () {
+            return {
+                templateUrl: 'AddServiceModal.html',
+                controller: 'DataController',
+                size: 'md'
+            }
+    };
+
     // Mouse over function, called from the Leaflet Map Events
     var countryMouseover = function (feature, leafletEvent) {
         var layer = leafletEvent.target;
@@ -51,7 +60,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     $scope.$on("leafletDirectiveGeoJson.mouseover", function(ev, leafletPayload) {
         countryMouseover(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
     });
-    
+
     $scope.$on("leafletDirectiveGeoJson.click", function(ev, leafletPayload) {
         clickArea(leafletPayload.leafletObject.feature)
     });
@@ -64,8 +73,19 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
          ServicesFactory.ServicesByArea($rootScope.area).then (function (response) {
             $rootScope.services = response.data
          });
-    }
-  
+    };
+
+    // get the modal window containing the form which permits to add points on the map and DB
+    var clickNewPoint = function()
+    {
+        var template = getModalForm();
+         $uibModal.open(template);
+         //gerrer l'ajout a la BD des new point
+         /*ServicesFactory.ServicesByArea($rootScope.area).then (function (response) {
+            $rootScope.services = response.data
+         });*/
+    };
+
     var getColor = function(number){
       switch(number) {
         case 5:
@@ -110,14 +130,14 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
             areas = response.data;
         }, function (error) {
             console.log(error);
-    });  
+    });
 
     $scope.init = function() {
 
         PublicAreasFactory.all().then (function (response) {
-      
+
         var features = new Array;
-        
+
         response.data.records.forEach (function (record) {
             areas.forEach( function (area) {
               if (area.code == record.fields.iris){
