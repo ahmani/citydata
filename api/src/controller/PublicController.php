@@ -5,7 +5,7 @@ namespace app\controller;
 use app\models\Family;
 use app\models\Service;
 use app\models\Area;
-
+use app\models\Geographical_data;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -234,4 +234,50 @@ class PublicController extends AbstractController
       }
     }*/
 
+    public function getServicesByFamilies($req,$res,$args)
+    {
+
+      $areas = [];
+    
+        if(!empty($req->getParsedBody()))
+        {
+          foreach ($req->getParsedBody() as $p){
+              try { 
+                $services = Service::where("id_family", "=", $p["id"])->get();
+
+                foreach ($services as $service){
+                // array_push($areas, $service->areasCount);
+                  foreach($service->areasCount as $a)
+                  {
+                    $areas[] = array("id_area" =>  $a->id ,   
+                                    "code" => str_split( $a->code, 5)[1] ,
+                                    "nombre" =>  $a->pivot->number) ;
+                  }
+                } 
+
+              } catch (ModelNotFoundException $e) {
+
+                return $this->json_error($res, 404, "Not found");
+              }
+          }
+        }
+      
+      //var_dump($services); die();
+      return $this->json_success($res, 200, json_encode($areas));
+
+    }
+
+
+    //Get list of geographical data
+    public function getGeographicalData($req,$res,$args)
+    {
+      try{
+        $data = Geographical_data::all();
+       
+      }catch(ModelNotFoundException $e){
+        return $this->json_error($res, 404, "Not found");
+      }
+
+            return $this->json_success($res, 200, json_encode($data));
+    }
 }

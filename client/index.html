@@ -28,8 +28,20 @@
   </style>
     </head>
 <body> 
-
-    <ng-controller ng-controller="DataController"id='data' data-ng-init="init()">
+    <ng-controller ng-controller="DataController" id='data' >
+        <div >
+                    <label ng-repeat="family in familiesList">
+                        <input type="checkbox" checklist-model="selected.families" checklist-value="family"/>{{family.description}}
+                        <br/>
+                    </label>
+                    <br/>
+                    <button ng-click="checkAll()">Check all</button>
+                    <button ng-click="uncheckAll()">Uncheck all</button> <br/>
+                    {{selected.families}}
+                    <br/>
+                    <a href="#" ng-click="changeFamilies()">Submit</a>
+            </div>
+    
        <leaflet lf-center="center" legend="legend" defaults="defaults" event-broadcast="events" height={{height}} width={{width}} center="center" geojson="geojson" markers="markers" paths="paths" tiles="tiles" ></leaflet>
     </ng-controller>
 </body>
@@ -58,9 +70,12 @@
         <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="app/app.js"></script>
         <script src="app/controller/data_controller.js"></script>
-        <script src="app/factory/zones_factory.js"></script>
+        <script src="app/factory/areas_factory.js"></script>
         <script src="app/factory/area_services_factory.js"></script>
         <script src="app/factory/public_areas_factory.js"></script>
+        <script src="app/factory/data_factory.js"></script>
+        <script src="app/factory/families_factory.js"></script>
+        <script src="lib/checklist-model.js"></script>
         <script src="bower_components/moment/min/moment.min.js"></script>
         <script src="bower_components/moment/min/locales.min.js"></script>
         <script src="bower_components/humanize-duration/humanize-duration.js"></script>

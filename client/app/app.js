@@ -1,4 +1,4 @@
-var app = angular.module("app", ['ngAnimate', 'leaflet-directive','ui.bootstrap', 'ui.router']);
+var app = angular.module("app", ['ngAnimate', 'leaflet-directive','ui.bootstrap', 'ui.router','checklist-model']);
 app.constant('API_URL', 'http://localhost/citydata/api/rest/');
 app.config(function($logProvider){
   $logProvider.debugEnabled(true);

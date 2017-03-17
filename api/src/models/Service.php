@@ -17,6 +17,12 @@ Class Service extends Model
 		return $this->belongsToMany('app\models\Area','service_by_area','id_area','id_service')->withPivot('number');
 	}
 
+	public function areasCount()
+	{
+		return $this->belongsToMany('app\models\Area','service_by_area','id_service','id_area')->withPivot('number')->where('number','>','0');
+	}
+
+
 //un service appartient a une famille
   public function family()
 	{
