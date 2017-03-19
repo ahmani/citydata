@@ -1,40 +1,11 @@
 angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 'DataFactory', 'FamiliesFactory',
                 function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory, DataFactory, FamiliesFactory) {
 
-                /*$scope.markers = [];
+                $scope.markers = [];
                 areas =[];
                 $scope.selected = {
-                     families: []
-                };*/
-
-
-    angular.extend($scope, {
-      height: 500,
-      width: 900,
-      center: {
-            lat: 48.69,
-            lng: 6.182,
-            zoom: 13
-      },
-      legend: {
-            position: 'bottomleft',
-            colors: [ 'yellow', 'orange', 'red' ],
-            labels: [ 'Densité minimale', 'Densité moyenne', 'Densité forte' ]
-      },
-      defaults: {
-            doubleClickZoom: false,
-            scrollWheelZoom: true
-      },
-      events: {
-            map: {
-            enable: ['click'],
-            logic: 'emit'
-            }
-      },
-      tiles: {
-        url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-      }
-    });
+                  families: []
+                };
 
 
     var getModal = function () {
@@ -47,13 +18,13 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
 
 
     // get the modal window containing the form which permits to add points on the map and DB
-    var getModalForm = function () {
+    /*var getModalForm = function () {
       return {
         templateUrl: 'AddServiceModal.html',
         controller: 'DataController',
         size: 'md'
       }
-    };
+    };*/
 
 
     var getFamilies = function()
@@ -86,6 +57,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         clickArea(leafletPayload.leafletObject.feature)
     });
 
+
     var clickArea = function(area)
     {
         var template = getModal();
@@ -96,16 +68,33 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
          });
     };
 
+
     // get the modal window containing the form which permits to add points on the map and DB
-    var clickNewPoint = function()
+    scope.$on("leafletDirectiveMap.click", function(event, args){
+           clickNewPoint(args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng)
+    });
+
+    var getModalForm = function () {
+      return {
+        templateUrl: 'AddServiceModal.html',
+        controller: 'DataController',
+        size: 'md'
+      }
+    };
+
+    var clickNewPoint = function(lat, lng)
     {
         var template = getModalForm();
          $uibModal.open(template);
-         //gerrer l'ajout a la BD des new point
-         /*ServicesFactory.ServicesByArea($rootScope.area).then (function (response) {
-            $rootScope.services = response.data
-         });*/
+         console.log(lat, lng);
+         $scope.lat = lat;
+         $scope.lng = lng;
     };
+
+    $scope.addData = function(){
+      var myNewService = {'famille' : $scope.newServiceFamily, 'service' : $scope.newService, 'latitude' : $scope.lat, 'longitude' : $scope.lng};
+      return $http.post('http://localhost/citydata/api/rest/services', myNewService);
+    }
 
     var getColor = function(number){
       switch(number) {
@@ -156,7 +145,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     };
 
 
-    ZoneFactory.all().then(function (response) {
+    AreaFactory.all().then(function (response) {
             areas = response.data;
         }, function (error) {
             console.log(error);

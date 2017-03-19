@@ -27,21 +27,9 @@
             }
   </style>
     </head>
-<body> 
-    <ng-controller ng-controller="DataController" id='data' >
-        <div >
-                    <label ng-repeat="family in familiesList">
-                        <input type="checkbox" checklist-model="selected.families" checklist-value="family"/>{{family.description}}
-                        <br/>
-                    </label>
-                    <br/>
-                    <button ng-click="checkAll()">Check all</button>
-                    <button ng-click="uncheckAll()">Uncheck all</button> <br/>
-                    {{selected.families}}
-                    <br/>
-                    <a href="#" ng-click="changeFamilies()">Submit</a>
-            </div>
-    
+<body>
+
+    <ng-controller ng-controller="DataController"id='data' data-ng-init="init()">
        <leaflet lf-center="center" legend="legend" defaults="defaults" event-broadcast="events" height={{height}} width={{width}} center="center" geojson="geojson" markers="markers" paths="paths" tiles="tiles" ></leaflet>
     </ng-controller>
 </body>
@@ -62,6 +50,25 @@
         </div>
     </div>
 </script>
+<script type="text/ng-template" id="AddServiceModal.html">
+    <div class="modal-header">
+        <button type="button" class="close"  ng-click="cancel()">&times;</button>
+        <!--<h4 class="modal-title text-center">{{item}}</h4>-->
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-lg-push-2 col-sm-push-2 col-lg-8 col-sm-8">
+              <form name="addServiceForm" method="post" role="form" id="addServForm" ng-submit="addData()" class="form-horizontal">
+                <p>
+                  <label>Family</label> : <input type="text"  ng-model="newServiceFamily" class="form-control" name="family" placeholder="Ex : supermarket"/>
+                  <label>Service</label> : <input type="text" ng-model="newService" class="form-control" name="service" placeholder="Ex : Carrefour City"/>
+                </p>
+                <button type="submit" value="Submit">Submit</button>
+              </form>
+            </div>
+        </div>
+    </div>
+</script>
         <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/angular-animate/angular-animate.min.js"></script>
         <script src="bower_components/leaflet/dist/leaflet.js"></script>
@@ -73,9 +80,6 @@
         <script src="app/factory/areas_factory.js"></script>
         <script src="app/factory/area_services_factory.js"></script>
         <script src="app/factory/public_areas_factory.js"></script>
-        <script src="app/factory/data_factory.js"></script>
-        <script src="app/factory/families_factory.js"></script>
-        <script src="lib/checklist-model.js"></script>
         <script src="bower_components/moment/min/moment.min.js"></script>
         <script src="bower_components/moment/min/locales.min.js"></script>
         <script src="bower_components/humanize-duration/humanize-duration.js"></script>
