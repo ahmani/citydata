@@ -82,7 +82,6 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
             fillOpacity: 0.3
         };
     };
-
     var createGeoJsonObject = function (data){
              return {
                  data: data,
@@ -95,7 +94,6 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         AreaFactory.all(JSON.stringify($scope.selected.families)).then(function (response) {
                 areas = response.data;
                 $scope.init()
-                console.log(areas)
             }, function (error) {
                 console.log(error);
         });  
@@ -110,7 +108,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                     lng: parseFloat(d.longitude),
                     icon : {
                                 iconUrl: 'https://lh4.ggpht.com/Tr5sntMif9qOPrKV_UVl7K8A_V3xQDgA7Sw_qweLUFlg76d_vGFA7q1xIKZ6IcmeGqg=w300',
-                                iconSize:     [60, 60],
+                                iconSize:     [35, 35],
                             }
                 });
             });
@@ -118,6 +116,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     }
 
     $scope.init = function() {
+        
         getFamilies();
         Getmarkers();
         //call the factory one time, put data in Array
