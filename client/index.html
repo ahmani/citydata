@@ -2,82 +2,110 @@
 <html lang="fr" ng-app="app" >
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Citydata</title>
         <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/custom-style.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
-        <style>
-            .legend {
-                font: 14px/16px Arial, Helvetica, sans-serif;
-                background: rgba(255,255,255, 0.9);
-                box-shadow: 0 0 15px rgba(0,0,0,0.2);
-                border-radius: 5px;
-                padding: 6px 8px;
-                width: 180px;
-                line-height: 18px;
-                color: #555;
-            }
-            .legend i {
-                width: 16px;
-                height: 16px;
-                float: left;
-                margin-right: 8px;
-                opacity: 0.7;
-            }
-  </style>
     </head>
-<body> 
-    <ng-controller ng-controller="DataController" id='data' >
-        <div >
-                    <label ng-repeat="family in familiesList">
-                        <input type="checkbox" checklist-model="selected.families" checklist-value="family"/>{{family.description}}
-                        <br/>
-                    </label>
-                    <br/>
-                    <button ng-click="checkAll()">Check all</button>
-                    <button ng-click="uncheckAll()">Uncheck all</button> <br/>
-                    {{selected.families}}
-                    <br/>
-                    <a href="#" ng-click="changeFamilies()">Submit</a>
-            </div>
-    
-       <leaflet lf-center="center" legend="legend" defaults="defaults" event-broadcast="events" height={{height}} width={{width}} center="center" geojson="geojson" markers="markers" paths="paths" tiles="tiles" ></leaflet>
-    </ng-controller>
-</body>
-<script type="text/ng-template" id="ZoneInfoModal.html">
-    <div class="modal-header">
-        <button type="button" class="close"  ng-click="cancel()">&times;</button>
-        <h4 class="modal-title text-center">{{item}}</h4>
-    </div>
-    <div class="modal-body">
+
+    <body class="container-fluid"> 
+
         <div class="row">
-            <div class="col-lg-push-2 col-sm-push-2 col-lg-8 col-sm-8">
-                <form role="form" id="destForm" ng-submit="process()" class="form-horizontal">
-                    <fieldset>
-                        <div ng-repeat="service in services">{{service.title}} : {{service.pivot.number}}</div>
-                    </fieldset>
-                </form>
+            <ng-controller ng-controller="DataController" id='data' >
+                <div class="col-lg-4 col-md-5 col-xs-12">
+
+                    <div class="row logo-space">
+                        <img class="logo" src="https://blog.okfn.org/files/2012/03/CityData.png">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-offset-1 col-xs-10">
+                            <div class="row">
+                                <div ng-repeat="family in familiesList">
+                                    <div ng-if="$index % 2 == 0"> 
+                                        <div class="col-xs-4">
+                                            <input type="checkbox" checklist-model="selected.families" checklist-value="family"/> {{family.description}}
+                                            <br/>
+                                        </div>
+                                    </div>
+
+                                    <div ng-if="$index % 2 != 0"> 
+                                        <div class="col-xs-offset-4 col-xs-4">
+                                            <input type="checkbox" checklist-model="selected.families" checklist-value="family"/> {{family.description}}
+                                            <br/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-4  col-sm-offset-0 col-xs-8 col-xs-offset-2">
+                                    <button class="btn btn-block" ng-click="checkAll()">Check all</button>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
+                                    <button class="btn btn-danger btn-block" ng-click="uncheckAll()">Uncheck all</button>
+                                </div>
+                                <div class="col-lg-offset-0 col-lg-4 col-sm-offset-0 col-sm-4 col-xs-8 col-xs-offset-2">
+                                    <a href="#" class="btn btn-success btn-block" ng-click="changeFamilies()">Submit</a>
+                                </div>
+                            </div>
+                            <!-- {{selected.families}} -->
+                        </div>
+                    </div><br/>
+
+                    <div class="row bottom-menu">
+                        <div class="col-xs-offset-1 col-xs-10">
+                            <button class="btn btn-block" ng-click="">Ajouter un point</button>
+                        </div><br/><br/>
+
+                        <div class="col-xs-offset-1 col-xs-10">
+                            <button class="btn btn-block" ng-click="">S'authentifier</button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="col-lg-8 col-md-7 col-xs-12">
+                    <leaflet class="map" lf-center="center" legend="legend" defaults="defaults" event-broadcast="events" height={{height}} width={{width}} center="center" geojson="geojson" markers="markers" paths="paths" tiles="tiles" ></leaflet>
+               </div>
+            </ng-controller>
+        </div>
+    </body>
+
+    <script type="text/ng-template" id="ZoneInfoModal.html">
+        <div class="modal-header">
+            <button type="button" class="close"  ng-click="cancel()">&times;</button>
+            <h4 class="modal-title text-center">{{item}}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-push-2 col-sm-push-2 col-lg-8 col-sm-8">
+                    <form role="form" id="destForm" ng-submit="process()" class="form-horizontal">
+                        <fieldset>
+                            <div ng-repeat="service in services">{{service.title}} : {{service.pivot.number}}</div>
+                        </fieldset>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</script>
-        <script src="bower_components/angular/angular.js"></script>
-        <script src="bower_components/angular-animate/angular-animate.min.js"></script>
-        <script src="bower_components/leaflet/dist/leaflet.js"></script>
-        <script src="lib/angular-leaflet-directive.min.js"></script>
-        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-        <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-        <script src="app/app.js"></script>
-        <script src="app/controller/data_controller.js"></script>
-        <script src="app/factory/areas_factory.js"></script>
-        <script src="app/factory/area_services_factory.js"></script>
-        <script src="app/factory/public_areas_factory.js"></script>
-        <script src="app/factory/data_factory.js"></script>
-        <script src="app/factory/families_factory.js"></script>
-        <script src="lib/checklist-model.js"></script>
-        <script src="bower_components/moment/min/moment.min.js"></script>
-        <script src="bower_components/moment/min/locales.min.js"></script>
-        <script src="bower_components/humanize-duration/humanize-duration.js"></script>
-        <script src="bower_components/angular-timer/dist/angular-timer.min.js"></script>
+    </script>
+
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/leaflet/dist/leaflet.js"></script>
+    <script src="lib/angular-leaflet-directive.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/controller/data_controller.js"></script>
+    <script src="app/factory/areas_factory.js"></script>
+    <script src="app/factory/area_services_factory.js"></script>
+    <script src="app/factory/public_areas_factory.js"></script>
+    <script src="app/factory/data_factory.js"></script>
+    <script src="app/factory/families_factory.js"></script>
+    <script src="lib/checklist-model.js"></script>
 </html>
