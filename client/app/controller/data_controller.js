@@ -70,7 +70,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
 
 
     // get the modal window containing the form which permits to add points on the map and DB
-    scope.$on("leafletDirectiveMap.click", function(event, args){
+    $scope.$on("leafletDirectiveMap.click", function(event, args){
            clickNewPoint(args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng)
     });
 
