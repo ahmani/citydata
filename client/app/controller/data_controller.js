@@ -1,11 +1,12 @@
 angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 'DataFactory', 'FamiliesFactory',
                 function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory, DataFactory, FamiliesFactory) {
-                
+
                 $scope.markers = [];
                 areas =[];
                 $scope.selected = {
-                     families: []
+                  families: []
                 };
+
 
     var getModal = function () {
             return {
@@ -14,6 +15,18 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                 size: 'md'
             }
     };
+
+
+    // get the modal window containing the form which permits to add points on the map and DB
+    /*var getModalForm = function () {
+      return {
+        templateUrl: 'AddServiceModal.html',
+        controller: 'DataController',
+        size: 'md'
+      }
+    };*/
+
+
     var getFamilies = function()
     {
         FamiliesFactory.all().then(function(response) {
@@ -23,7 +36,8 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
             });
         });
     }
-    
+
+
     // Mouse over function, called from the Leaflet Map Events
     var countryMouseover = function (feature, leafletEvent) {
         var layer = leafletEvent.target;
@@ -38,10 +52,11 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     $scope.$on("leafletDirectiveGeoJson.mouseover", function(ev, leafletPayload) {
         countryMouseover(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
     });
-    
+
     $scope.$on("leafletDirectiveGeoJson.click", function(ev, leafletPayload) {
         clickArea(leafletPayload.leafletObject.feature)
     });
+
 
     var clickArea = function(area)
     {
@@ -51,8 +66,36 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
          ServicesFactory.ServicesByArea($rootScope.area).then (function (response) {
             $rootScope.services = response.data
          });
+    };
+
+
+    // get the modal window containing the form which permits to add points on the map and DB
+    $scope.$on("leafletDirectiveMap.click", function(event, args){
+           clickNewPoint(args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng)
+    });
+
+    var getModalForm = function () {
+      return {
+        templateUrl: 'AddServiceModal.html',
+        controller: 'DataController',
+        size: 'md'
+      }
+    };
+
+    var clickNewPoint = function(lat, lng)
+    {
+        var template = getModalForm();
+         $uibModal.open(template);
+         console.log(lat, lng);
+         $scope.lat = lat;
+         $scope.lng = lng;
+    };
+
+    $scope.addData = function(){
+      var myNewService = {'famille' : $scope.newServiceFamily, 'service' : $scope.newService, 'latitude' : $scope.lat, 'longitude' : $scope.lng};
+      return $http.post('http://localhost/citydata/api/rest/services', myNewService);
     }
-  
+
     var getColor = function(number){
       switch(number) {
         case 5:
@@ -96,8 +139,15 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                 $scope.init()
             }, function (error) {
                 console.log(error);
-        });  
+        });
     };
+
+
+    AreaFactory.all().then(function (response) {
+            areas = response.data;
+        }, function (error) {
+            console.log(error);
+    });
 
     var Getmarkers = function()
     {
@@ -115,15 +165,16 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         });
     }
 
+
     $scope.init = function() {
         
         getFamilies();
-        Getmarkers();
+        //Getmarkers();
         //call the factory one time, put data in Array
         PublicAreasFactory.all().then (function (response) {
-      
+
         var features = new Array;
-        
+
         response.data.records.forEach (function (record) {
             if(areas.length > 0){
             areas.forEach( function (area) {
@@ -171,8 +222,8 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
       },
       legend: {
             position: 'bottomleft',
-            colors: [ 'yellow', 'orange', 'red' ],
-            labels: [ 'Densité minimale', 'Densité moyenne', 'Densité forte' ]
+            colors: [ 'yellow',"orange", 'red', 'blue', 'green' ],
+            labels: [ 'Nombre : 0', 'Nombre : 1','Nombre : 2', 'Nombre : 3', 'Nombre : 4' ]
       },
       defaults: {
             doubleClickZoom: false,
