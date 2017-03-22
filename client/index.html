@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="col-lg-8 col-md-7 col-xs-12">
-                    <leaflet class="map" lf-center="center" legend="legend" defaults="defaults" event-broadcast="events" height={{height}} width={{width}} center="center" geojson="geojson" markers="markers" paths="paths" tiles="tiles" ></leaflet>
+                    <ng-view></ng-view>
                </div>
             </ng-controller>
         </div>
@@ -84,7 +84,7 @@
         <script src="bower_components/leaflet/dist/leaflet.js"></script>
         <script src="lib/angular-leaflet-directive.min.js"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-        <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+        <script src="bower_components/angular-route/angular-route.js"></script>
         <script src="app/app.js"></script>
         <script src="app/controller/data_controller.js"></script>
         <script src="app/factory/areas_factory.js"></script>

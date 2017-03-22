@@ -101,13 +101,13 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         case (number < 2 ):
             return "blue"
             break;
-        case (number < 5):
+        case (number < 3):
             return "green"
             break;
-        case (number < 10):
+        case (number < 6):
             return "red"
             break;
-        case (number < 20):
+        case (number < 8):
             return "orange"
             break;
         default:
