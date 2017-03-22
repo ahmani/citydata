@@ -31,10 +31,15 @@ $app->group('/areas', function (){
       $this->get('', PublicController::class. ':getAreas')->setName('listAreas');
       $this->get('/{id}/services', PublicController::class. ':getServicesByArea')->setName('listServicesByArea');
       $this->get('/{id}/families', PublicController::class. ':getFamiliesByArea')->setName('listFamiliesByArea');
+      $this->get('/services/count', PublicController::class. ':getNumberServicesByAreas')->setName('Numberservicesareas');
       $this->get('/{id}/information', PublicController::class. ':getInformationByArea')->setName('informationByArea');
 });
 
 
 $app->group('/admin', function (){
       $this->delete('/families/{id}', PrivateController::class. ':deleteFamily')->setName('removeFamily');
+});
+
+$app->group('/geographical-data', function (){
+      $this->post('', PublicController::class. ':addGeographicalData');
 });

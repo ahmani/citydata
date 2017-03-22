@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr" ng-app="app" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Citydata</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
+
+    </head>
+<body>
+    <ng-controller ng-controller="PointsController" id='point' ng-init="init()">
+       <leaflet lf-center="center" defaults="defaults" event-broadcast="events" height={{height}} width={{width}} center="center" geojson="geojson" markers="markers" tiles="tiles" ></leaflet>
+       <form>
+         <input type='text' value="{{lat}}" readonly/><br/>
+         <input type='text' value="{{lng}}" readonly/><br/>
+         <input type='text' ng-model="pointDescription"/><br/>
+         <input type='text' value="{{areaId}}" readonly/><br/>
+         <input type='text' value="{{areaDescription}}" readonly/><br/>
+         <select ng-model="selectedService" ng-options="service as service.title for service in services track by service.id"></select>
+         <input ng-click="createPoint()" type="submit" value="Valider">
+       </form>
+    </ng-controller>
+</body>
+
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+<script src="bower_components/leaflet/dist/leaflet.js"></script>
+<script src="lib/angular-leaflet-directive.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="app/app.js"></script>
+<script src="app/controller/points_controller.js"></script>
+<script src="app/factory/areas_factory.js"></script>
+<script src="app/factory/area_services_factory.js"></script>
+<script src="app/factory/public_areas_factory.js"></script>
+<script src="lib/checklist-model.js"></script>
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/moment/min/locales.min.js"></script>
+<script src="bower_components/humanize-duration/humanize-duration.js"></script>
+<script src="bower_components/angular-timer/dist/angular-timer.min.js"></script>
+
+
+</html>

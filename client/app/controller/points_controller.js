@@ -1,0 +1,163 @@
+angular.module('app').controller('PointsController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory', 'ServicesFactory',
+                function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, ServicesFactory) {
+
+    angular.extend($scope, {
+      height: 500,
+      width: 900,
+      center: {
+            lat: 48.69,
+            lng: 6.182,
+            zoom: 13
+      },
+      defaults: {
+            doubleClickZoom: false,
+            scrollWheelZoom: true
+      },
+      events: {
+            map: {
+            enable: ['click'],
+            logic: 'emit'
+            }
+      },
+      tiles: {
+        url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+      },
+      markers:{}
+    });
+
+
+    // Services
+    $http.get('http://project2.local/citydata/api/rest/services').then (function (response) {
+      $scope.services = new Array;
+      //console.log(levelResponse.data.level);
+      response.data.forEach( function (service){
+        $scope.services.push({"id" : service.id, "title" : service.title});
+        $scope.selectedService = $scope.services[0];
+      });
+      //console.log($scope.levels);
+
+    },
+    function (error) {
+      console.log(error);
+    });
+
+    $scope.createPoint = function (){
+      data = { "lat" : $scope.lat, "lng" : $scope.lng, "description": $scope.pointDescription, "area" : $scope.areaId, "service" : $scope.selectedService };
+      //console.log(data);
+      $http.post('http://project2.local/citydata/api/rest/geographical-data', data).then (function (response) {
+        console.log(response);
+      });
+    };
+
+    // Mouse over function, called from the Leaflet Map Events
+    var countryMouseover = function (feature, leafletEvent) {
+        var layer = leafletEvent.target;
+        layer.setStyle({
+            weight: 2,
+            color: '#666',
+            fillColor: 'white'
+        });
+        layer.bringToFront();
+    };
+
+    $scope.$on("leafletDirectiveGeoJson.mouseover", function(ev, leafletPayload) {
+        countryMouseover(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
+    });
+
+    $scope.$on("leafletDirectiveGeoJson.click", function(ev, leafletPayload) {
+        clickArea(leafletPayload.leafletEvent.latlng, leafletPayload.leafletObject.feature)
+    });
+
+    var clickArea = function(latlng, area){
+        $scope.markers = new Array();
+        $scope.markers.push({
+          lat: latlng.lat,
+          lng: latlng.lng
+        });
+        $scope.lat = latlng.lat;
+        $scope.lng = latlng.lng;
+        $scope.areaId = area.properties.id;
+        $scope.areaDescription = area.properties.description;
+
+
+    }
+
+
+    var getStyle = function(feature){
+        return {
+            fillColor: 'yellow',
+            weight: 2,
+            opacity: 0.3,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.3
+        };
+    };
+
+    var createGeoJsonObject = function (data){
+             return {
+                 data: data,
+                 resetStyleOnMouseout: true,
+                 style: getStyle
+             };
+    };
+
+    $scope.selected = {
+            families: []
+    };
+
+
+    $scope.init = function() {
+
+      var features = new Array;
+      var areas = new Array;
+
+      $http.get('http://project2.local/citydata/api/rest/areas').then(function(response) {
+        areas = response.data;
+
+        //call the factory one time, put data in Array
+        PublicAreasFactory.all().then (function (response) {
+
+          response.data.records.forEach (function (record) {
+            if(areas.length > 0){
+              areas.forEach( function (area) {
+                if (area.code.slice(-4) == record.fields.iris){
+                  if(record.fields.geo_shape.coordinates.length == 1){
+                       features.push({
+                         "type": "Feature",
+                         "properties": {
+                           "description" : area.description,
+                           "code" : area.code.slice(-4),
+                           "id" : area.id
+                         },
+                         "geometry": {
+                           "type": "Polygon",
+                           "coordinates": record.fields.geo_shape.coordinates
+                         }
+                       });
+                  }
+                }
+              });
+
+            }
+          });
+
+          var data = {
+            "type": "FeatureCollection",
+            "features": features
+          };
+
+
+          $scope.geojson = createGeoJsonObject(data);
+          //console.log($scope.geojson)
+
+        });
+    },
+    function (error) {
+      console.log(error);
+    });
+  }
+
+
+ }
+]);
