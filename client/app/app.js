@@ -1,21 +1,9 @@
-var app = angular.module("app", ['ngAnimate', 'leaflet-directive','ui.bootstrap', 'ui.router','checklist-model']);
+var app = angular.module("app", ['ngAnimate', 'leaflet-directive','ui.bootstrap', 'ngRoute','checklist-model']);
 app.constant('API_URL', 'http://localhost/citydata/api/rest/');
-app.config(function($logProvider){
-  $logProvider.debugEnabled(true);
-});
-/*app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
-    //Default route
-    //$urlRouterProvider.otherwise('/index.html');
 
-    //Routeur à partir de /home#{view}
-    $stateProvider.state(
-        'index', {
-            url: '/index', templateUrl: 'index.html', controller: 'DataController'
-        })
-        .state('home.destination',{
-            url: '/destination', templateUrl: 'app/templates/destination.html', controller: 'DestinationController'
-        })
-    $httpProvider.interceptors.push('httpRequestInterceptor');
-
+app.config(function($routeProvider) {
+  $routeProvider
+                .when("/", {
+                    templateUrl : "app/templates/home.html"
+                })
 });
-app.run(run);*/

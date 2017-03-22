@@ -70,26 +70,26 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
 
 
     // get the modal window containing the form which permits to add points on the map and DB
-    $scope.$on("leafletDirectiveMap.click", function(event, args){
+   /* $scope.$on("leafletDirectiveMap.click", function(event, args){
            clickNewPoint(args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng)
-    });
+    });*/
 
-    var getModalForm = function () {
+   /* var getModalForm = function () {
       return {
         templateUrl: 'AddServiceModal.html',
         controller: 'DataController',
         size: 'md'
       }
-    };
+    };*/
 
-    var clickNewPoint = function(lat, lng)
+    /*var clickNewPoint = function(lat, lng)
     {
         var template = getModalForm();
          $uibModal.open(template);
          console.log(lat, lng);
          $scope.lat = lat;
          $scope.lng = lng;
-    };
+    };*/
 
     $scope.addData = function(){
       var myNewService = {'famille' : $scope.newServiceFamily, 'service' : $scope.newService, 'latitude' : $scope.lat, 'longitude' : $scope.lng};
@@ -97,21 +97,21 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     }
 
     var getColor = function(number){
-      switch(number) {
-        case 5:
-            return "green"
-            break;
-        case 4:
+      switch(true) {
+        case (number < 2 ):
             return "blue"
             break;
-        case 3:
+        case (number < 3):
+            return "green"
+            break;
+        case (number < 6):
             return "red"
             break;
-        case 2:
+        case (number < 8):
             return "orange"
             break;
         default:
-           return "yellow"
+            return "yellow"
       }
     };
 
@@ -142,7 +142,6 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         });
     };
 
-
     AreaFactory.all().then(function (response) {
             areas = response.data;
         }, function (error) {
@@ -151,7 +150,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
 
     var Getmarkers = function()
     {
-        DataFactory.all().then(function(response){
+        DataFactory.all($scope.selected.families).then(function(response){
             response.data.forEach( function (d) {
                 $scope.markers.push({
                     lat: parseFloat(d.latitude),
