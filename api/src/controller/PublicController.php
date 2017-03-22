@@ -309,4 +309,16 @@ class PublicController extends AbstractController
 
     }
 
+    //Get list of geographical data
+    public function getGeographicalData($req,$res,$args)
+    {
+      try{
+        $data = Geographical_data::all();
+
+      }catch(ModelNotFoundException $e){
+        return $this->json_error($res, 404, "Not found");
+      }
+
+            return $this->json_success($res, 200, json_encode($data));
+    }
 }

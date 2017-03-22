@@ -1,149 +1,11 @@
-angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 'leafletData',
-                function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory, leafletData) {
+angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 'DataFactory', 'FamiliesFactory',
+                function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory, DataFactory, FamiliesFactory) {
 
-    angular.extend($scope, {
-      height: 500,
-      width: 900,
-      center: {
-            lat: 48.69,
-            lng: 6.182,
-            zoom: 13
-      },
-      legend: {
-            position: 'bottomleft',
-            colors: [ 'yellow', 'orange', 'red' ],
-            labels: [ 'Densité minimale', 'Densité moyenne', 'Densité forte' ]
-      },
-      defaults: {
-            doubleClickZoom: false,
-            scrollWheelZoom: true
-      },
-      events: {
-            map: {
-            enable: ['click'],
-            logic: 'emit'
-            }
-      },
-      tiles: {
-        url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-      }
-    });
-
-    function addGeoJsonLayerWithClustering(data) {
-      var markers = L.markerClusterGroup();
-      var geoJsonLayer = L.geoJson(data, {
-          onEachFeature: function (feature, layer) {
-              layer.bindPopup(feature.properties.name);
-          }
-      });
-      markers.addLayer(geoJsonLayer);
-      leafletData.getMap().then(function(map) {
-        map.addLayer(markers);
-        //map.fitBounds(markers.getBounds());
-      });
-    }
-
-
-    var features = new Array;
-
-    $scope.changeTest = function(v){
-
-      if ($scope.answers3[v]) {
-        $http.get('test.geojson').then(function(response) {
-          addGeoJsonLayerWithClustering(response.data);
-
-        });
-      }
-    };
-
-
-        $scope.changeStop = function(v){
-
-          //empty features with Category Parking
-          features.slice().reverse().forEach(function (feature, index, object){
-            if (feature.properties.category == 'Bus Stop'){
-              features.splice(object.length - 1 - index, 1);
-            }
-          });
-
-          if ($scope.answers2[v]) {
-            $http.get('http://project2.local/citydata/api/rest/bus-stops').then(function(response) {
-
-              response.data.forEach( function (data) {
-                var coordinates = new Array;
-                coordinates[0] = data.longitude;
-                coordinates[1] = data.latitude;
-
-                features.push({
-                  "type": "Feature",
-                  "properties": {
-                    "name" : data.description,
-                    "category" : "Bus Stop"
-                  },
-                  "geometry": {
-                    "type": "Point",
-                    "coordinates": coordinates
-                  }
-                });
-
-              });
-
-              var data = {
-                 "type": "FeatureCollection",
-                 "features": features
-              };
-
-              //$scope.geojson = createGeoJsonObject(data);
-              $scope.geojson = addGeoJsonLayerWithClustering(data);
-
-            });
-          }
-        };
-
-
-
-
-    $scope.changeParking = function(v){
-
-      //empty features with Category Parking
-      features.slice().reverse().forEach(function (feature, index, object){
-        if (feature.properties.category == 'Parking'){
-          features.splice(object.length - 1 - index, 1);
-        }
-      });
-
-      if ($scope.answers[v]) {
-        $http.get('https://geoservices.grand-nancy.org/arcgis/rest/services/public/VOIRIE_Parking/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&f=pjson').then(function(response) {
-
-          response.data.features.forEach( function (feature) {
-            var coordinates = new Array;
-            coordinates[0] = feature.geometry.x;
-            coordinates[1] = feature.geometry.y;
-
-            features.push({
-              "type": "Feature",
-              "properties": {
-                "name" : feature.attributes.NOM,
-                "category" : "Parking"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": coordinates
-              }
-            });
-
-          });
-
-          var data = {
-             "type": "FeatureCollection",
-             "features": features
-          };
-
-          $scope.geojson = createGeoJsonObject(data);
-
-        });
-      }
-    };
+                $scope.markers = [];
+                areas =[];
+                $scope.selected = {
+                  families: []
+                };
 
 
     var getModal = function () {
@@ -153,12 +15,29 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                 size: 'md'
             }
     };
-    $http.get('http://project2.local/citydata/api/rest/families').then(function(response) {
-        $scope.familiesList = [];
-        response.data.forEach(function(data) {
-          $scope.familiesList.push(data);
+
+
+    // get the modal window containing the form which permits to add points on the map and DB
+    /*var getModalForm = function () {
+      return {
+        templateUrl: 'AddServiceModal.html',
+        controller: 'DataController',
+        size: 'md'
+      }
+    };*/
+
+
+    var getFamilies = function()
+    {
+        FamiliesFactory.all().then(function(response) {
+            $scope.familiesList = [];
+            response.data.forEach(function(data) {
+            $scope.familiesList.push(data);
+            });
         });
-    });
+    }
+
+
     // Mouse over function, called from the Leaflet Map Events
     var countryMouseover = function (feature, leafletEvent) {
         var layer = leafletEvent.target;
@@ -178,6 +57,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         clickArea(leafletPayload.leafletObject.feature)
     });
 
+
     var clickArea = function(area)
     {
         var template = getModal();
@@ -186,24 +66,52 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
          ServicesFactory.ServicesByArea($rootScope.area).then (function (response) {
             $rootScope.services = response.data
          });
+    };
+
+
+    // get the modal window containing the form which permits to add points on the map and DB
+   /* $scope.$on("leafletDirectiveMap.click", function(event, args){
+           clickNewPoint(args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng)
+    });*/
+
+   /* var getModalForm = function () {
+      return {
+        templateUrl: 'AddServiceModal.html',
+        controller: 'DataController',
+        size: 'md'
+      }
+    };*/
+
+    /*var clickNewPoint = function(lat, lng)
+    {
+        var template = getModalForm();
+         $uibModal.open(template);
+         console.log(lat, lng);
+         $scope.lat = lat;
+         $scope.lng = lng;
+    };*/
+
+    $scope.addData = function(){
+      var myNewService = {'famille' : $scope.newServiceFamily, 'service' : $scope.newService, 'latitude' : $scope.lat, 'longitude' : $scope.lng};
+      return $http.post('http://localhost/citydata/api/rest/services', myNewService);
     }
 
     var getColor = function(number){
-      switch(number) {
-        case 5:
-            return "green"
-            break;
-        case 4:
+      switch(true) {
+        case (number < 2 ):
             return "blue"
             break;
-        case 3:
+        case (number < 5):
+            return "green"
+            break;
+        case (number < 10):
             return "red"
             break;
-        case 2:
+        case (number < 20):
             return "orange"
             break;
         default:
-           return "yellow"
+            return "yellow"
       }
     };
 
@@ -217,7 +125,6 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
             fillOpacity: 0.3
         };
     };
-
     var createGeoJsonObject = function (data){
              return {
                  data: data,
@@ -226,33 +133,46 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
              };
     };
 
-    var areas = new Array;
-
-    $scope.selected = {
-            families: []
-    };
-
-      $scope.changeFamilies = function() {
-        AreaFactory.all($scope.selected.families).then(function (response) {
+    $scope.changeFamilies = function() {
+        AreaFactory.all(JSON.stringify($scope.selected.families)).then(function (response) {
                 areas = response.data;
-                //console.log(response);
                 $scope.init()
             }, function (error) {
                 console.log(error);
         });
-     };
+    };
+
+    AreaFactory.all().then(function (response) {
+            areas = response.data;
+        }, function (error) {
+            console.log(error);
+    });
+
+    var Getmarkers = function()
+    {
+        DataFactory.all($scope.selected.families).then(function(response){
+            response.data.forEach( function (d) {
+                $scope.markers.push({
+                    lat: parseFloat(d.latitude),
+                    lng: parseFloat(d.longitude),
+                    icon : {
+                                iconUrl: 'https://lh4.ggpht.com/Tr5sntMif9qOPrKV_UVl7K8A_V3xQDgA7Sw_qweLUFlg76d_vGFA7q1xIKZ6IcmeGqg=w300',
+                                iconSize:     [35, 35],
+                            }
+                });
+            });
+        });
+    }
+
+
     $scope.init = function() {
 
-
+        getFamilies();
+        //Getmarkers();
         //call the factory one time, put data in Array
         PublicAreasFactory.all().then (function (response) {
 
-        //empty features with Category Area
-        features.slice().reverse().forEach(function (feature, index, object){
-          if ((feature.properties.category == 'Area') || (feature.properties.category == 'Bus Stop')) {
-            features.splice(object.length - 1 - index, 1);
-          }
-        });
+        var features = new Array;
 
         response.data.records.forEach (function (record) {
             if(areas.length > 0){
@@ -264,8 +184,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                           "properties": {
                             "name" : record.fields.iris,
                             "number" : area.nombre,
-                            "id_area" : area.id_area,
-                            "category" : "Area"
+                            "id_area" : area.id_area
                           },
                           "geometry": {
                             "type": "Polygon",
@@ -284,16 +203,43 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
            "features": features
         };
 
-
         $scope.geojson = createGeoJsonObject(data);
-        //console.log($scope.geojson)
-
       },
       function (error) {
        console.log(error);
       });
     }
 
+
+    angular.extend($scope, {
+      height: 500,
+      width: 900,
+      center: {
+            lat: 48.69,
+            lng: 6.182,
+            zoom: 13
+      },
+      legend: {
+            position: 'bottomleft',
+            colors: [ 'yellow',"orange", 'red', 'blue', 'green' ],
+            labels: [ 'Nombre : 0', 'Nombre : 1','Nombre : 2', 'Nombre : 3', 'Nombre : 4' ]
+      },
+      defaults: {
+            doubleClickZoom: false,
+            scrollWheelZoom: true
+      },
+      events: {
+            map: {
+            enable: ['click'],
+            logic: 'emit'
+            }
+      },
+      tiles: {
+        url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+      }
+    });
+
+    $scope.init();
 
   }
 ]);

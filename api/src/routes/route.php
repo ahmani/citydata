@@ -35,11 +35,14 @@ $app->group('/areas', function (){
       $this->get('/{id}/information', PublicController::class. ':getInformationByArea')->setName('informationByArea');
 });
 
-
 $app->group('/admin', function (){
       $this->delete('/families/{id}', PrivateController::class. ':deleteFamily')->setName('removeFamily');
 });
 
 $app->group('/geographical-data', function (){
       $this->post('', PublicController::class. ':addGeographicalData');
+});
+
+$app->group('/data', function (){
+      $this->get('', PublicController::class. ':getGeographicalData')->setName('ListGeographicalData');
 });
