@@ -36,5 +36,5 @@ $app->group('/areas', function (){
 });
 
 $app->group('/data', function (){
-      $this->get('', PublicController::class. ':getGeographicalData')->setName('ListGeographicalData');
+      $this->get('/{id}/families', PublicController::class. ':getGeographicalData')->setName('ListGeographicalData');
 });

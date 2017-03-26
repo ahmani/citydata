@@ -132,14 +132,19 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                  style: getStyle
              };
     };
-
-    $scope.changeFamilies = function() {
-        AreaFactory.all(JSON.stringify($scope.selected.families)).then(function (response) {
+    $scope.selected = {};
+    $scope.getChecked = function(selected)
+    {
+        $scope.selected = selected;
+        AreaFactory.all($scope.selected).then(function (response) {
                 areas = response.data;
                 $scope.init()
             }, function (error) {
                 console.log(error);
         });
+    }
+    $scope.changeFamilies = function() {
+       
     };
 
     AreaFactory.all().then(function (response) {

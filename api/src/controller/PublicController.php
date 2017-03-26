@@ -238,11 +238,12 @@ class PublicController extends AbstractController
     {
 
       $areas = [];
-    
+        
         if(!empty($req->getParsedBody()))
         {
-          foreach ($req->getParsedBody() as $p){
-              try { 
+          $p = $req->getParsedBody();
+          //foreach ($req->getParsedBody() as $p){
+              try {   
                 $services = Service::where("id_family", "=", $p["id"])->get();
 
                 foreach ($services as $service){
@@ -251,18 +252,17 @@ class PublicController extends AbstractController
                   {
                     $areas[] = array("id_area" =>  $a->id ,   
                                     "code" => str_split( $a->code, 5)[1] ,
-                                    "nombre" =>  $a->pivot->number) ;
+                                    "nombre" =>  (int)$a->sumservices) ;
                   }
-                } 
+                }                 
 
               } catch (ModelNotFoundException $e) {
 
                 return $this->json_error($res, 404, "Not found");
               }
-          }
+         // }
         }
       
-      //var_dump($services); die();
       return $this->json_success($res, 200, json_encode($areas));
 
     }
@@ -271,9 +271,13 @@ class PublicController extends AbstractController
     //Get list of geographical data
     public function getGeographicalData($req,$res,$args)
     {
+     $data = array(); 
       try{
-        $data = Geographical_data::all();
-       
+        $services = Service::where("id_family", "=", $args["id"])->get();
+          foreach($services as $service)
+          {
+            $data = Geographical_data::where("id_service", "=", $service->id)->get();
+          }
       }catch(ModelNotFoundException $e){
         return $this->json_error($res, 404, "Not found");
       }

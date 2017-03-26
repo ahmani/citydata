@@ -19,7 +19,9 @@ Class Service extends Model
 
 	public function areasCount()
 	{
-		return $this->belongsToMany('app\models\Area','service_by_area','id_service','id_area')->withPivot('number')->where('number','>','0');
+		return $this->belongsToMany('app\models\Area','service_by_area','id_service','id_area')
+		->selectRaw('*,sum(number) as sumservices')->groupBy('service_by_area.id_area')->orderBy('sumservices', 'DESC')
+		->withPivot('number');
 	}
 
 
