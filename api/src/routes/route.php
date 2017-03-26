@@ -13,7 +13,7 @@ $app->group('/families', function (){
       $this->get('', PublicController::class. ':getFamilies')->setName('listFamilies');
       $this->get('/{id}', PublicController::class. ':getFamilyById');
       $this->get('/{id}/services', PublicController::class. ':getServicesByFamily');
-      $this->post('/services', PublicController::class. ':getServicesByFamilies');
+      $this->post('/areas', PublicController::class. ':getGroupedAreasByFamilies');
 });
 
 $app->group('/services', function (){

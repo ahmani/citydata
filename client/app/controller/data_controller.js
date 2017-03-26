@@ -96,28 +96,29 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
       return $http.post('http://localhost/citydata/api/rest/services', myNewService);
     }
 
-    var getColor = function(number){
+    var getColor = function(percent){
+
       switch(true) {
-        case (number < 2 ):
+        case (percent  < 5):
             return "blue"
             break;
-        case (number < 3):
+        case (percent < 10):
             return "green"
             break;
-        case (number < 6):
-            return "red"
+        case (percent < 20):
+            return "yellow"
             break;
-        case (number < 8):
+        case (percent < 50):
             return "orange"
             break;
         default:
-            return "yellow"
+            return "red"
       }
     };
 
     var getStyle = function(feature){
         return {
-            fillColor: getColor(feature.properties.number),
+            fillColor: getColor(feature.properties.number / n * 100),
             weight: 2,
             opacity: 0.3,
             color: 'white',
@@ -135,18 +136,13 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
 
     $scope.changeFamilies = function() {
         AreaFactory.all(JSON.stringify($scope.selected.families)).then(function (response) {
-                areas = response.data;
+                n = response.data.n;
+                areas = response.data.values;
                 $scope.init()
             }, function (error) {
                 console.log(error);
         });
     };
-
-    AreaFactory.all().then(function (response) {
-            areas = response.data;
-        }, function (error) {
-            console.log(error);
-    });
 
     var Getmarkers = function()
     {
@@ -221,8 +217,8 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
       },
       legend: {
             position: 'bottomleft',
-            colors: [ 'yellow',"orange", 'red', 'blue', 'green' ],
-            labels: [ 'Nombre : 0', 'Nombre : 1','Nombre : 2', 'Nombre : 3', 'Nombre : 4' ]
+            colors: [ 'blue',"green", 'yellow', 'orange', 'red' ],
+            labels: [ ' < 5%', '< 10%','< 20%', '< 50%', '< 100%' ]
       },
       defaults: {
             doubleClickZoom: false,

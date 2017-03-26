@@ -234,7 +234,7 @@ class PublicController extends AbstractController
       }
     }*/
 
-    public function getServicesByFamilies($req,$res,$args)
+    public function getGroupedAreasByFamilies($req,$res,$args)
     {
 
       $areas = [];
@@ -246,12 +246,12 @@ class PublicController extends AbstractController
                 $services = Service::where("id_family", "=", $p["id"])->get();
 
                 foreach ($services as $service){
-                // array_push($areas, $service->areasCount);
-                  foreach($service->areasCount as $a)
+
+                  foreach($service->areas as $area)
                   {
-                    $areas[] = array("id_area" =>  $a->id ,
-                                    "code" => str_split( $a->code, 5)[1] ,
-                                    "nombre" =>  $a->pivot->number) ;
+                    $areas[] = array("id_area" =>  $area->id ,
+                                    "code" => str_split( $area->code, 5)[1] ,
+                                    "nombre" =>  $area->pivot->number) ;
                   }
                 }
 
@@ -260,10 +260,37 @@ class PublicController extends AbstractController
                 return $this->json_error($res, 404, "Not found");
               }
           }
+
+          // sum nombre by same id_area
+          $groups = array();
+          $key = 0;
+          $n = 0;
+          foreach ($areas as $area) {
+                  $key = $area['id_area'];
+                  if (!array_key_exists($key, $groups)) {
+                      $groups[$key] = array(
+                          'id_area' => $area['id_area'],
+                          'code' => $area['code'],
+                          'nombre' => $area['nombre']
+                      );
+                  } else {
+                      $groups[$key]['nombre'] += $area['nombre'];
+                  }
+                  $n += $area['nombre'];
+                  $key++;
+          }
+          $values = array_values($groups);
+
         }
 
+        $result = array (
+            'n' => $n,
+            'values' => $values
+        );
+
+
       //var_dump($services); die();
-      return $this->json_success($res, 200, json_encode($areas));
+      return $this->json_success($res, 200, json_encode($result));
 
     }
 
@@ -281,13 +308,20 @@ class PublicController extends AbstractController
       $area = filter_var($data['area'], FILTER_SANITIZE_NUMBER_INT);
       $service = filter_var($data['service']['id'], FILTER_SANITIZE_NUMBER_INT);
 
+      try {
+        $family = Service::select('id_family')->where('id', $service)->get();
+      }
+      catch (ModelNotFoundException $e) {
+        return $this->json_error($res, 500, json_encode("Erreur dans la base"));
+      }
+
 
       $g = new Geographical_data;
       $g->latitude = $lat;
       $g->longitude = $lng;
       $g->description = $description;
       $g->id_area = $area;
-      $g->id_family = $service;
+      $g->id_family = $family[0]->id_family;
 
 
       try {

@@ -14,12 +14,14 @@ Class Service extends Model
   // un service peut appartenir a plusieurs zones
 	public function areas()
 	{
-		return $this->belongsToMany('app\models\Area','service_by_area','id_area','id_service')->withPivot('number');
+		return $this->belongsToMany('app\models\Area','service_by_area','id_service','id_area')->withPivot('number');
 	}
 
-	public function areasCount()
+	public function areasSum()
 	{
-		return $this->belongsToMany('app\models\Area','service_by_area','id_service','id_area')->withPivot('number')->where('number','>','0');
+		return $this->belongsToMany('app\models\Area','service_by_area','id_service','id_area')
+		->selectRaw('area.*, sum(service_by_area.number) as sumArea')
+		->groupBy('service_by_area.id_area');
 	}
 
 
