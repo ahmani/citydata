@@ -13,7 +13,7 @@ $app->group('/families', function (){
       $this->get('', PublicController::class. ':getFamilies')->setName('listFamilies');
       $this->get('/{id}', PublicController::class. ':getFamilyById');
       $this->get('/{id}/services', PublicController::class. ':getServicesByFamily');
-      $this->post('/services', PublicController::class. ':getServicesByFamilies');
+      $this->post('/areas', PublicController::class. ':getGroupedAreasByFamilies');
 });
 
 $app->group('/services', function (){
@@ -35,6 +35,15 @@ $app->group('/areas', function (){
       $this->get('/{id}/information', PublicController::class. ':getInformationByArea')->setName('informationByArea');
 });
 
+$app->group('/admin', function (){
+      $this->delete('/families/{id}', PrivateController::class. ':deleteFamily')->setName('removeFamily');
+});
+
+$app->group('/geographical-data', function (){
+      $this->post('', PublicController::class. ':addGeographicalData');
+});
+
 $app->group('/data', function (){
-      $this->get('/{id}/families', PublicController::class. ':getGeographicalData')->setName('ListGeographicalData');
+      $this->get('', PublicController::class. ':getGeographicalData')->setName('ListGeographicalData');
+      
 });

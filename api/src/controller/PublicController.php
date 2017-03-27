@@ -172,7 +172,7 @@ class PublicController extends AbstractController
     }
 
 		public function getNumberServicesByAreas($req, $res, $args)
-		{  
+		{
 			try {
     	      $areas = Area::all();
             foreach($areas as $area)
@@ -185,7 +185,7 @@ class PublicController extends AbstractController
                                               "code" => str_split($area->code, 5)[1] ,
                                               "nombre" => $service->countservices) ;
                 }
-              }						
+              }
             }
     	    	return $this->json_success($res, 200, json_encode($areas_by_services));
 
@@ -234,7 +234,7 @@ class PublicController extends AbstractController
       }
     }*/
 
-    public function getServicesByFamilies($req,$res,$args)
+    public function getGroupedAreasByFamilies($req,$res,$args)
     {
 
       $areas = [];
@@ -242,42 +242,119 @@ class PublicController extends AbstractController
         if(!empty($req->getParsedBody()))
         {
           $p = $req->getParsedBody();
-          //foreach ($req->getParsedBody() as $p){
-              try {   
-                $services = Service::where("id_family", "=", $p["id"])->get();
 
+              try {
+                $services = Service::where("id_family", "=", $p["id"])->get();
                 foreach ($services as $service){
-                // array_push($areas, $service->areasCount);
-                  foreach($service->areasCount as $a)
-                  {
-                    $areas[] = array("id_area" =>  $a->id ,   
-                                    "code" => str_split( $a->code, 5)[1] ,
-                                    "nombre" =>  (int)$a->sumservices) ;
-                  }
-                }                 
+                    foreach($service->areas as $area)
+                    {
+                      $areas[] = array("id_area" =>  $area->id ,
+                                      "code" => str_split( $area->code, 5)[1] ,
+                                      "nombre" =>  $area->pivot->number) ;
+                    }
+                }
 
               } catch (ModelNotFoundException $e) {
-
                 return $this->json_error($res, 404, "Not found");
               }
-         // }
         }
-      
-      return $this->json_success($res, 200, json_encode($areas));
+
+          // sum nombre by same id_area
+          $groups = array();
+          $key = 0;
+          $n = 0;
+          foreach ($areas as $area) {
+                  $key = $area['id_area'];
+                  if (!array_key_exists($key, $groups)) {
+                      $groups[$key] = array(
+                          'id_area' => $area['id_area'],
+                          'code' => $area['code'],
+                          'nombre' => $area['nombre']
+                      );
+                  } else {
+                      $groups[$key]['nombre'] += $area['nombre'];
+                  }
+                  $n += $area['nombre'];
+                  $key++;
+          }
+          $values = array_values($groups);
+
+        
+
+        $result = array (
+            'n' => $n,
+            'values' => $values
+        );
+
+
+      //var_dump($services); die();
+      return $this->json_success($res, 200, json_encode($result));
 
     }
 
+
+    public function addGeographicalData($req,$res,$args){
+      $data = $req->getParsedBody();
+
+      if (!isset($data['lat']) || !isset($data['lng']) || !isset($data['description']) ||  !isset($data['area']) || !isset($data['service']['id'])) {
+        return $this->json_error($res, 404, "Erreur dans le formulaire");
+      }
+
+      $lat = filter_var($data['lat'], FILTER_SANITIZE_STRING);
+      $lng = filter_var($data['lng'], FILTER_SANITIZE_STRING);
+      $description = filter_var($data['description'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+      $area = filter_var($data['area'], FILTER_SANITIZE_NUMBER_INT);
+      $service = filter_var($data['service']['id'], FILTER_SANITIZE_NUMBER_INT);
+
+      $g = new Geographical_data;
+      $g->latitude = $lat;
+      $g->longitude = $lng;
+      $g->description = $description;
+      $g->id_area = $area;
+      $g->id_service = $service;
+
+
+      try {
+        $g->save();
+
+        $services  = Service::where('id', $service)->get();
+        foreach($services as $s){
+          if(empty($s->areas->find($area)))
+          {
+              $s->areas()->sync(array($area));
+              $s->areas()->updateExistingPivot($area, array('number' => 1), false);
+              $number = 1;
+          }
+          else{
+            $areas = $s->areas->find($area);
+
+            $number = $areas->pivot->number;
+            $number = $number +1;
+            $s->areas()->updateExistingPivot($area, array('number' => $number), false);
+          }
+            
+        }
+
+        return $this->json_success($res, 200, json_encode($number));
+      }
+      catch (ModelNotFoundException $e) {
+        return $this->json_error($res, 500, json_encode("Erreur dans la base"));
+      }
+
+
+    }
 
     //Get list of geographical data
     public function getGeographicalData($req,$res,$args)
     {
      $data = array(); 
       try{
-        $services = Service::where("id_family", "=", $args["id"])->get();
-          foreach($services as $service)
+         $data = Geographical_data::all();
+          //$services = Service::where("id_family", "=", $args["id"])->get();
+          /*foreach($services as $service)
           {
             $data = Geographical_data::where("id_service", "=", $service->id)->get();
-          }
+          }*/
       }catch(ModelNotFoundException $e){
         return $this->json_error($res, 404, "Not found");
       }

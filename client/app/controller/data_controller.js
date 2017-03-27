@@ -6,6 +6,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                 $scope.selected = {
                   families: []
                 };
+                $scope.Selectedareas = [];
 
 
     var getModal = function () {
@@ -15,17 +16,6 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                 size: 'md'
             }
     };
-
-
-    // get the modal window containing the form which permits to add points on the map and DB
-    /*var getModalForm = function () {
-      return {
-        templateUrl: 'AddServiceModal.html',
-        controller: 'DataController',
-        size: 'md'
-      }
-    };*/
-
 
     var getFamilies = function()
     {
@@ -68,59 +58,32 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
          });
     };
 
+    var getColor = function(percent){
 
-    // get the modal window containing the form which permits to add points on the map and DB
-   /* $scope.$on("leafletDirectiveMap.click", function(event, args){
-           clickNewPoint(args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng)
-    });*/
-
-   /* var getModalForm = function () {
-      return {
-        templateUrl: 'AddServiceModal.html',
-        controller: 'DataController',
-        size: 'md'
-      }
-    };*/
-
-    /*var clickNewPoint = function(lat, lng)
-    {
-        var template = getModalForm();
-         $uibModal.open(template);
-         console.log(lat, lng);
-         $scope.lat = lat;
-         $scope.lng = lng;
-    };*/
-
-    $scope.addData = function(){
-      var myNewService = {'famille' : $scope.newServiceFamily, 'service' : $scope.newService, 'latitude' : $scope.lat, 'longitude' : $scope.lng};
-      return $http.post('http://localhost/citydata/api/rest/services', myNewService);
-    }
-
-    var getColor = function(number){
       switch(true) {
-        case (number < 2 ):
+        case (percent  < 5):
             return "blue"
             break;
-        case (number < 3):
+        case (percent < 10):
             return "green"
             break;
-        case (number < 6):
-            return "red"
+        case (percent < 20):
+            return "yellow"
             break;
-        case (number < 8):
+        case (percent < 50):
             return "orange"
             break;
         default:
-            return "yellow"
+            return "red"
       }
     };
 
     var getStyle = function(feature){
         return {
-            fillColor: getColor(feature.properties.number),
+            fillColor: getColor(feature.properties.number / n * 100),
             weight: 2,
-            opacity: 0.3,
-            color: 'white',
+            opacity: 0.6,
+            color: 'black',
             dashArray: '3',
             fillOpacity: 0.3
         };
@@ -137,7 +100,12 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     {
         $scope.selected = selected;
         AreaFactory.all($scope.selected).then(function (response) {
-                areas = response.data;
+                n = response.data.n;
+                areas = response.data.values;
+    /*$scope.changeFamilies = function() {
+        AreaFactory.all(JSON.stringify($scope.selected.families)).then(function (response) {
+                n = response.data.n;
+                areas = response.data.values;*/
                 $scope.init()
             }, function (error) {
                 console.log(error);
@@ -147,33 +115,32 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
        
     };
 
-    AreaFactory.all().then(function (response) {
-            areas = response.data;
-        }, function (error) {
-            console.log(error);
-    });
-
     var Getmarkers = function()
     {
-        DataFactory.all($scope.selected.families).then(function(response){
-            response.data.forEach( function (d) {
-                $scope.markers.push({
-                    lat: parseFloat(d.latitude),
-                    lng: parseFloat(d.longitude),
-                    icon : {
-                                iconUrl: 'https://lh4.ggpht.com/Tr5sntMif9qOPrKV_UVl7K8A_V3xQDgA7Sw_qweLUFlg76d_vGFA7q1xIKZ6IcmeGqg=w300',
-                                iconSize:     [35, 35],
-                            }
+        //console.log($scope.Selectedareas)
+        if($scope.Selectedareas.length > 0)
+        {
+            
+            DataFactory.all(JSON.stringify($scope.Selectedareas)).then(function(response){
+                response.data.forEach( function (d) {
+                    $scope.markers.push({
+                        lat: parseFloat(d.latitude),
+                        lng: parseFloat(d.longitude),
+                        icon : {
+                                    iconUrl: 'https://lh4.ggpht.com/Tr5sntMif9qOPrKV_UVl7K8A_V3xQDgA7Sw_qweLUFlg76d_vGFA7q1xIKZ6IcmeGqg=w300',
+                                    iconSize:     [35, 35],
+                                }
+                    });
                 });
             });
-        });
+        }    
     }
 
 
     $scope.init = function() {
-        
+
         getFamilies();
-        //Getmarkers();
+       Getmarkers();
         //call the factory one time, put data in Array
         PublicAreasFactory.all().then (function (response) {
 
@@ -184,6 +151,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
             areas.forEach( function (area) {
               if (area.code == record.fields.iris){
                     if(record.fields.geo_shape.coordinates.length == 1){
+                        $scope.Selectedareas.push(area.id_area)
                         features.push({
                           "type": "Feature",
                           "properties": {
@@ -222,12 +190,12 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
       center: {
             lat: 48.69,
             lng: 6.182,
-            zoom: 13
+            zoom: 14
       },
       legend: {
             position: 'bottomleft',
-            colors: [ 'yellow',"orange", 'red', 'blue', 'green' ],
-            labels: [ 'Nombre : 0', 'Nombre : 1','Nombre : 2', 'Nombre : 3', 'Nombre : 4' ]
+            colors: [ 'blue',"green", 'yellow', 'orange', 'red' ],
+            labels: [ ' < 5%', '< 10%','< 20%', '< 50%', '< 100%' ]
       },
       defaults: {
             doubleClickZoom: false,

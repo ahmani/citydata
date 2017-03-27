@@ -6,4 +6,7 @@ app.config(function($routeProvider) {
                 .when("/", {
                     templateUrl : "app/templates/home.html"
                 })
+                .when("/point", {
+                    templateUrl : "app/templates/add_point.html"
+                })
 });

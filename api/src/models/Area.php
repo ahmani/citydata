@@ -17,9 +17,10 @@ Class Area extends Model
 		return $this->belongsToMany('app\models\Service','service_by_area','id_area','id_service')->withPivot('number');
 	}
 
-	public function servicesCount()
+	public function servicesSum()
 	{
-		//SELECT *, SUM(number) FROM `service_by_area` GROUP by id_area ORDER by id_area DESC,SUM(number) DESC
-		return $this->belongsToMany('app\models\Service','service_by_area','id_service','id_area')->withPivot('number')->selectRaw('count(service_by_area.id_service) as countservices');
+		return $this->belongsToMany('app\models\Service','service_by_area','id_area','id_service')
+		->selectRaw('service.*, sum(service_by_area.number) as sumServices')
+		->groupBy('service_by_area.id_service');
 	}
 }

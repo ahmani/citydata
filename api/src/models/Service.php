@@ -14,21 +14,19 @@ Class Service extends Model
   // un service peut appartenir a plusieurs zones
 	public function areas()
 	{
-		return $this->belongsToMany('app\models\Area','service_by_area','id_area','id_service')->withPivot('number');
+		return $this->belongsToMany('app\models\Area','service_by_area','id_service','id_area')->withPivot('number');
 	}
 
-	public function areasCount()
+	public function areasSum()
 	{
 		return $this->belongsToMany('app\models\Area','service_by_area','id_service','id_area')
 		->selectRaw('*,sum(number) as sumservices')->groupBy('service_by_area.id_area')->orderBy('sumservices', 'DESC')
 		->withPivot('number');
 	}
-
-
-//un service appartient a une famille
-  public function family()
-	{
-		return $this->belongsTo('app\models\Family','id_family');
-	}
+	//un service appartient a une famille
+	public function family()
+		{
+			return $this->belongsTo('app\models\Family','id_family');
+		}
 
 }
