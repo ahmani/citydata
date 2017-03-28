@@ -14,7 +14,7 @@ Class Family extends Model
   //une famille a plusieurs services
 	public function services()
 	{
-		return $this->hasMany('src\models\Service','id_family');
+		return $this->hasMany('app\models\Service','id_family');
 	}
 
 }
