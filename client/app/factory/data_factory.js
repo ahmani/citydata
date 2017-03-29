@@ -1,8 +1,7 @@
 angular.module('app').factory('DataFactory', ['$http', 'API_URL', function ($http, API_URL ) {
 return {
         all:function (areas) {
-            console.log(areas)
-           return  $http.get(API_URL + 'data');
+           return  $http.post(API_URL + 'data', areas);
         }
     }
 }]); 

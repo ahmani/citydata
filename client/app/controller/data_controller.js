@@ -1,13 +1,14 @@
 angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 'DataFactory', 'FamiliesFactory',
                 function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory, DataFactory, FamiliesFactory) {
 
-                $scope.markers = [];
-                areas =[];
-                $scope.selected = {
-                  families: []
-                };
-                $scope.Selectedareas = [];
-
+    $scope.markers = [];
+    areas =[];
+    $scope.selected = {
+        families: []
+    };
+    $rootScope.percents = []
+   // $rootScope.Selectedareas = [];
+   // $scope.Selectedareas = [];
 
     var getModal = function () {
             return {
@@ -50,11 +51,22 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
 
     var clickArea = function(area)
     {
-        var template = getModal();
+        ///$rootScope.Selectedareas = $scope.Selectedareas;
+         var template = getModal();
          $rootScope.area = area.properties.id_area
+         //console.log(area.properties.id_area);
+         $rootScope.percentages = []
          $uibModal.open(template);
+
          ServicesFactory.servicesByArea($rootScope.area).then (function (response) {
-            $rootScope.services = response.data
+             //console.log(response.data)
+             $rootScope.services_family = response.data
+            /*response.data.forEach(function(d)
+            {
+                $rootScope.percentages.push( Math.round((d.pivot.number /n)*100) )
+
+            })*/
+
          });
     };
 
@@ -102,56 +114,79 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         AreaFactory.all($scope.selected).then(function (response) {
                 n = response.data.n;
                 areas = response.data.values;
-    /*$scope.changeFamilies = function() {
-        AreaFactory.all(JSON.stringify($scope.selected.families)).then(function (response) {
-                n = response.data.n;
-                areas = response.data.values;*/
                 $scope.init()
             }, function (error) {
                 console.log(error);
         });
     }
-    $scope.changeFamilies = function() {
-
-    };
 
     var Getmarkers = function()
     {
-        //console.log($scope.Selectedareas)
-        if($scope.Selectedareas.length > 0)
+        if($scope.selectedareas.length > 0)
         {
-
-            DataFactory.all(JSON.stringify($scope.Selectedareas)).then(function(response){
+            $scope.markers = [];
+            DataFactory.all(JSON.stringify($scope.selectedareas)).then(function(response){
                 response.data.forEach( function (d) {
                     $scope.markers.push({
                         lat: parseFloat(d.latitude),
                         lng: parseFloat(d.longitude),
-                        icon : {
-                                    iconUrl: 'https://lh4.ggpht.com/Tr5sntMif9qOPrKV_UVl7K8A_V3xQDgA7Sw_qweLUFlg76d_vGFA7q1xIKZ6IcmeGqg=w300',
-                                    iconSize:     [35, 35],
-                                }
+                        message: d.description,
+                        icon : Geticon(parseInt(d.id_family))
                     });
                 });
             });
         }
     }
 
+    var Geticon = function(id_family)
+    {
+        switch(id_family) {
+            case (1):
+               var icon = {
+                    iconUrl: 'img/icons/parking-icon.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            case (3):
+                var icon = {
+                    iconUrl: 'img/icons/supermarket-icon.png',
+                    iconSize:     [26, 26],
+                 }
+                break;
+            case (5):
+                var icon = {
+                    iconUrl: 'img/icons/petit-commerce-icon.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            default:
+                var icon = {
+                    iconUrl: 'https://lh4.ggpht.com/Tr5sntMif9qOPrKV_UVl7K8A_V3xQDgA7Sw_qweLUFlg76d_vGFA7q1xIKZ6IcmeGqg=w300',
+                    iconSize:     [26, 26],
+                }
+      }
+
+        return icon;
+    }
+
 
     $scope.init = function() {
 
         getFamilies();
-       Getmarkers();
+
         //call the factory one time, put data in Array
         PublicAreasFactory.all().then (function (response) {
 
         var features = new Array;
+        $scope.selectedareas = [];
+        $scope.percents = [];
 
         response.data.records.forEach (function (record) {
             if(areas.length > 0){
+            $scope.selectedareas = areas
             areas.forEach( function (area) {
               if (area.code == record.fields.iris){
                     if(record.fields.geo_shape.coordinates.length == 1){
-                        $scope.Selectedareas.push(area.id_area)
                         features.push({
                           "type": "Feature",
                           "properties": {
@@ -176,13 +211,13 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
            "features": features
         };
 
+        Getmarkers();
         $scope.geojson = createGeoJsonObject(data);
       },
       function (error) {
        console.log(error);
       });
     }
-
 
     angular.extend($scope, {
       height: 500,
@@ -195,7 +230,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
       legend: {
             position: 'bottomleft',
             colors: [ 'blue',"green", 'yellow', 'orange', 'red' ],
-            labels: [ ' < 5%', '< 10%','< 20%', '< 50%', '< 100%' ]
+            labels: [ '0% < n < 5%', '5% < n < 10%', '10% < n < 20%', '20% < n < 50%', '50% < n < 100%' ]
       },
       defaults: {
             doubleClickZoom: false,

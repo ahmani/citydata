@@ -32,6 +32,7 @@ $app->group('/areas', function (){
       $this->get('/{id}/services', PublicController::class. ':getServicesByArea')->setName('listServicesByArea');
       $this->get('/{id}/families', PublicController::class. ':getFamiliesByArea')->setName('listFamiliesByArea');
       $this->get('/services/count', PublicController::class. ':getNumberServicesByAreas')->setName('Numberservicesareas');
+      $this->get('/{id}/details', PublicController::class. ':getDetailsByArea')->setName('getDetailsByArea');
       $this->get('/{id}/information', PublicController::class. ':getInformationByArea')->setName('informationByArea');
 });
 
@@ -44,6 +45,6 @@ $app->group('/geographical-data', function (){
 });
 
 $app->group('/data', function (){
-      $this->get('', PublicController::class. ':getGeographicalData')->setName('ListGeographicalData');
+      $this->post('', PublicController::class. ':getGeographicalData')->setName('ListGeographicalData');
       
 });

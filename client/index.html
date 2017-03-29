@@ -19,15 +19,29 @@
     <script type="text/ng-template" id="ZoneInfoModal.html">
         <div class="modal-header">
             <button type="button" class="close"  ng-click="cancel()">&times;</button>
-            <h4 class="modal-title text-center">{{item}}</h4>
+            <h4 class="modal-title text-center">{{items}}</h4>
         </div>
         <div class="modal-body">
             <div class="row">
-                <div class="col-lg-push-2 col-sm-push-2 col-lg-8 col-sm-8">
-                    <form role="form" id="destForm" ng-submit="process()" class="form-horizontal">
-                        <fieldset>
-                            <div ng-repeat="service in services">{{service.title}} : {{service.pivot.number}}</div>
-                        </fieldset>
+                <div class="col-lg-push-1 col-sm-push-1 col-lg-10 col-sm-10">
+                    <form role="form" id="destForm" ng-submit="process()" class="form-inline">
+                        <div ng-repeat="service in services_family track by $index">
+                            <div class="custom-label">
+                                <label for="example-text-input" class="col-form-label">{{service.family}}</label>
+                            </div>
+                                <div class="custom-progress">
+                                    <div class="progress" >
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{service.pourcentage}}"
+                                        aria-valuemin="0" aria-valuemax="100" style="width:{{service.pourcentage}}%">
+                                            {{service.pourcentage}}%
+                                        </div>
+                                    </div>
+                                    <div ng-repeat="s in service.services">
+                                       <label class="service-label">{{s.title}}({{s.number}})</label>
+                                    </div>
+                                </div>
+
+                        </div>
                     </form>
                 </div>
             </div>

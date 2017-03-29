@@ -47,6 +47,7 @@ a.btn {
   color: #333333;
   text-align: center;
   padding: .5em;
+  margin-bottom: 1em;
   text-decoration: none;
 }
 
@@ -68,4 +69,34 @@ a.btn:hover {
     .map {
         position: fixed !important;
     }
+}
+
+
+.custom-progress {
+    width: 50%;
+    display: inline-block;
+}
+.custom-label {
+    width: 46%;
+    float: left;
+    display: inline-block;
+}
+.progress {
+    height: 25px;
+}
+
+.progress-bar {
+    color: #555;
+    line-height: 25px;
+}
+.service-label{
+     float: left;
+    font-size: 12px;
+    font-family: initial;
+    margin-right: 5px;
+    margin-bottom: 0px;
+}
+.modal-content {
+    height: 540px;
+    overflow-y: scroll;
 }
