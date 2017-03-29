@@ -238,7 +238,7 @@ class PublicController extends AbstractController
     {
 
       $areas = [];
-        
+
         if(!empty($req->getParsedBody()))
         {
           $p = $req->getParsedBody();
@@ -279,7 +279,7 @@ class PublicController extends AbstractController
           }
           $values = array_values($groups);
 
-        
+
 
         $result = array (
             'n' => $n,
@@ -332,7 +332,7 @@ class PublicController extends AbstractController
             $number = $number +1;
             $s->areas()->updateExistingPivot($area, array('number' => $number), false);
           }
-            
+
         }
 
         return $this->json_success($res, 200, json_encode($number));
@@ -347,7 +347,7 @@ class PublicController extends AbstractController
     //Get list of geographical data
     public function getGeographicalData($req,$res,$args)
     {
-     $data = array(); 
+     $data = array();
       try{
          $data = Geographical_data::all();
           //$services = Service::where("id_family", "=", $args["id"])->get();

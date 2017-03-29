@@ -40,14 +40,30 @@ body {
     text-align: center;
 }
 
-/* Custom, iPhone Retina */ 
+
+a.btn {
+  background-color: #c0c0c0;
+  border-radius: 5px;
+  color: #333333;
+  text-align: center;
+  padding: .5em;
+  text-decoration: none;
+}
+
+a.btn:hover {
+  text-decoration: none;
+  color: #333333;
+}
+
+
+/* Custom, iPhone Retina */
 @media only screen and (min-width : 240px) {
     .map {
         position: relative !important;
     }
 }
 
-/* Custom, iPhone Retina */ 
+/* Custom, iPhone Retina */
 @media only screen and (min-width : 991px) {
     .map {
         position: fixed !important;

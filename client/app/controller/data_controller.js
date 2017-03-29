@@ -53,7 +53,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         var template = getModal();
          $rootScope.area = area.properties.id_area
          $uibModal.open(template);
-         ServicesFactory.ServicesByArea($rootScope.area).then (function (response) {
+         ServicesFactory.servicesByArea($rootScope.area).then (function (response) {
             $rootScope.services = response.data
          });
     };
@@ -112,7 +112,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         });
     }
     $scope.changeFamilies = function() {
-       
+
     };
 
     var Getmarkers = function()
@@ -120,7 +120,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         //console.log($scope.Selectedareas)
         if($scope.Selectedareas.length > 0)
         {
-            
+
             DataFactory.all(JSON.stringify($scope.Selectedareas)).then(function(response){
                 response.data.forEach( function (d) {
                     $scope.markers.push({
@@ -133,7 +133,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                     });
                 });
             });
-        }    
+        }
     }
 
 
