@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/custom-style.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/jquery/jquery.js"></script>
         <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
     </head>
     <body class="container-fluid" style="background-color: #0b164e;">
@@ -47,6 +47,39 @@
             </div>
         </div>
     </script>
+    <script type="text/ng-template" id="options.html">
+        <div class="modal-header">
+            <button type="button" class="close"  ng-click="cancel()">&times;</button>
+            <h4 class="modal-title text-center">{{items}}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-push-1 col-sm-push-1 col-lg-10 col-sm-10">
+                    <div class="make-switch switch-large">
+                        <label>Afficher les Marqueurs de la carte</label>
+                        <label class="switch">
+                            <input type="checkbox" ng-change="GetChecked()" ng-model="check_markers" checked />
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
+                    <div class="make-switch switch-large">
+                        <label>Afficher les arrêts de bus</label>
+                        <label class="switch">
+                            <input type="checkbox" ng-change="" ng-model="" checked />
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
+                    <div class="make-switch switch-large">
+                        <label>Afficher les vélos Stan</label>
+                        <label class="switch">
+                            <input type="checkbox" ng-change="" ng-model="" checked />
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
         <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/angular-animate/angular-animate.min.js"></script>
         <script src="bower_components/leaflet/dist/leaflet.js"></script>
@@ -55,6 +88,7 @@
         <script src="bower_components/angular-route/angular-route.js"></script>
         <script src="app/app.js"></script>
         <script src="app/controller/data_controller.js"></script>
+         <script src="app/controller/families_controller.js"></script>
         <script src="app/controller/points_controller.js"></script>
         <script src="app/factory/areas_factory.js"></script>
         <script src="app/factory/geographical_data_factory.js"></script>

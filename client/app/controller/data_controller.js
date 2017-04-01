@@ -7,14 +7,23 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         families: []
     };
     $rootScope.percents = []
-   // $rootScope.Selectedareas = [];
-   // $scope.Selectedareas = [];
+    $scope.selected = {};
+    $scope.selectedareas = [];
 
     var getModal = function () {
             return {
                 templateUrl: 'ZoneInfoModal.html',
                 controller: 'DataController',
                 size: 'md'
+            }
+    };
+
+    var getOpitonsModal = function () {
+            return {
+                templateUrl: 'options.html',
+                controller: 'FamiliesController',
+                size: 'md',
+                scope: $scope
             }
     };
 
@@ -49,15 +58,32 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     });
 
 
+    $scope.openOptionsModal = function()
+    {
+        var template = getOpitonsModal();  
+        template.resolve = {
+            'items' : function()
+            {
+                return {
+                    savefunction : Getmarkers,
+                    removefunction : Removemarkers
+                }
+            }
+        }
+        $uibModal.open(template);
+    }
+
+    var Removemarkers = function()
+    {
+        $scope.markers = [];
+    }
     var clickArea = function(area)
     {
-        ///$rootScope.Selectedareas = $scope.Selectedareas;
          var template = getModal();
          $rootScope.area = area.properties.id_area
-        $rootScope.percentages = []
+         $rootScope.percentages = []
          $uibModal.open(template);
          ServicesFactory.ServicesByArea($rootScope.area).then (function (response) {
-             console.log(response.data)
             $rootScope.services_family = response.data
             /*response.data.forEach(function(d)
             {
@@ -105,7 +131,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                  style: getStyle
              };
     };
-    $scope.selected = {};
+    
     $scope.getChecked = function(selected)
     {
         $scope.selected = selected;
@@ -136,9 +162,9 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         }    
     }
 
-    var Geticon = function($id_family)
+    var Geticon = function(id_family)
     {   
-        switch($id_family) {
+        switch(id_family) {
             case (1):
                var icon = {
                     iconUrl: 'img/icons/parking-icon.png',
@@ -171,7 +197,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     $scope.init = function() {
 
         getFamilies();
-      
+        console.log($scope)
         //call the factory one time, put data in Array
         PublicAreasFactory.all().then (function (response) {
 
@@ -182,6 +208,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         response.data.records.forEach (function (record) {
             if(areas.length > 0){
             $scope.selectedareas = areas
+            
             areas.forEach( function (area) {
               if (area.code == record.fields.iris){
                     if(record.fields.geo_shape.coordinates.length == 1){
@@ -209,7 +236,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
            "features": features
         };
         
-        Getmarkers();
+        //Getmarkers();
         $scope.geojson = createGeoJsonObject(data);
       },
       function (error) {

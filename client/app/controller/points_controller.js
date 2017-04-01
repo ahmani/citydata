@@ -1,5 +1,5 @@
-angular.module('app').controller('PointsController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory', 'GeographicalData',
-                function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, GeographicalData) {
+angular.module('app').controller('PointsController',['API_URL','$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory', 'GeographicalData',
+                function(API_URL,$rootScope,$scope, $http, AreaFactory, PublicAreasFactory, GeographicalData) {
 
     angular.extend($scope, {
       height: 500,
@@ -27,7 +27,7 @@ angular.module('app').controller('PointsController',['$rootScope','$scope', '$ht
 
 
     // Services
-    $http.get('http://localhost/citydata/api/rest/services').then (function (response) {
+    $http.get(API_URL+'services').then (function (response) {
       $scope.services = new Array;
       //console.log(levelResponse.data.level);
       response.data.forEach( function (service){
@@ -115,7 +115,7 @@ angular.module('app').controller('PointsController',['$rootScope','$scope', '$ht
       var features = new Array;
       var areas = new Array;
 
-      $http.get('http://localhost/citydata/api/rest/areas').then(function(response) {
+      $http.get(API_URL + 'areas').then(function(response) {
         areas = response.data;
 
         //call the factory one time, put data in Array
