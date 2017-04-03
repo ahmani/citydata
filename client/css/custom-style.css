@@ -22,9 +22,7 @@
     height: 100vh !important;
 }
 
-body {
-    background-color: #4887bd;
-}
+
 
 .logo {
     border-radius: 50%;
@@ -40,19 +38,37 @@ body {
     text-align: center;
 }
 
-/* Custom, iPhone Retina */ 
+
+a.btn {
+  background-color: #c0c0c0;
+  border-radius: 5px;
+  color: #333333;
+  text-align: center;
+  padding: .5em;
+  margin-bottom: 1em;
+  text-decoration: none;
+}
+
+a.btn:hover {
+  text-decoration: none;
+  color: #333333;
+}
+
+
+/* Custom, iPhone Retina */
 @media only screen and (min-width : 240px) {
     .map {
         position: relative !important;
     }
 }
 
-/* Custom, iPhone Retina */ 
+/* Custom, iPhone Retina */
 @media only screen and (min-width : 991px) {
     .map {
         position: fixed !important;
     }
 }
+
 
 .custom-progress {
     width: 50%;
@@ -82,7 +98,6 @@ body {
     height: 540px;
     overflow-y: scroll;
 }
-
 .switch {
   position: relative;
   display: inline-block;
@@ -140,3 +155,54 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+
+.sidebar {
+                position : absolute;
+                top : 0;
+                left : -160px;;
+                transition : 100ms left;
+            }
+            #navigation-toggle {
+                    float: left;
+                    color: white;
+                    text-decoration: none;
+                    padding: 20px;
+                    position: absolute;
+                    z-index: 999;
+
+            }
+            .show {
+                left : 0;
+            }
+            .navigation {
+                list-style : none;
+                padding : 0;
+                margin : 0;
+            }
+            .navigation-items a {
+                display : block;
+                background-color : #444;
+                color : white;
+                line-height : 2em;
+                text-decoration : none;
+                padding : 10px 30px;
+                width : 100px;
+
+            }
+            .navigation-items a:hover {
+                background-color : #222;
+            }
+            #navigation-toggle div{
+                    width: 29px;
+                    height: 3px;
+                    background-color: white;
+                    margin: 6px 0;
+            }
+            .nav-toggle
+            {
+                    height: 100%;
+                    width: 7%;
+                    position: absolute;
+                    background: rgb(11, 22, 78);
+            }

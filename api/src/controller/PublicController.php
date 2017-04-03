@@ -238,7 +238,7 @@ class PublicController extends AbstractController
     {
 
       $areas = [];
-        
+
         if(!empty($req->getParsedBody()))
         {
           $p = $req->getParsedBody();
@@ -279,7 +279,7 @@ class PublicController extends AbstractController
           }
           $values = array_values($groups);
 
-        
+
 
         $result = array (
             'n' => $n,
@@ -332,7 +332,7 @@ class PublicController extends AbstractController
             $number = $number +1;
             $s->areas()->updateExistingPivot($area, array('number' => $number), false);
           }
-            
+
         }
 
         return $this->json_success($res, 200, json_encode($number));
@@ -348,7 +348,7 @@ class PublicController extends AbstractController
     public function getGeographicalData($req,$res,$args)
     {
         $data = $req->getParsedBody();
-        
+
         $result = array();
         $resultat = array();
       try{
@@ -365,7 +365,7 @@ class PublicController extends AbstractController
                             "id_area" => $r->id_area,
                             "id_service" => $r->id_service,
                             "id_family" => $family->id_family);
-                
+
               }
           }
       }catch(ModelNotFoundException $e){
@@ -376,13 +376,13 @@ class PublicController extends AbstractController
     }
 
     public function getDetailsByArea($req,$res,$args)
-    {   
+    {
           $area = Area::where("id", "=", $args["id"])->firstOrFail();
           $services = $area->services;
           $groups= array();
           $total = 0;
           $families = array();
-          
+
           foreach($services as $service)
           {
               $total = $total + $service->pivot->number;
@@ -395,31 +395,31 @@ class PublicController extends AbstractController
             {
                $nbr = 0;
               $f = Family::where("id", "=", $family)->firstOrFail();
-              
+
               $string = '
                   SELECT * FROM `service`
                   join service_by_area on service.id = service_by_area.id_service where service.id_family = '.$family.'
                    and service_by_area.id_area = '.$area->id.'
               ';
               $services_family = DB::select($string);
-              
+
               foreach ($services_family as $s)
               {
                   $service = Service::where('id','=',$s["id"])->firstOrFail();
-                  if($service->areas->find($area) !=  "")                  
+                  if($service->areas->find($area) !=  "")
                       $nbr = $nbr + $service->areas->find($area)->pivot->number;
               }
 
-              $data[] = array("family" => $f->description, 
+              $data[] = array("family" => $f->description,
                                 "number" => $nbr,
                                 "pourcentage" => round(($nbr/$total)*100),
                                 "services" => $services_family
                                 );
             }
           }
-          
+
 
           return $this->json_success($res, 200, json_encode($data));
-          
+
     }
 }

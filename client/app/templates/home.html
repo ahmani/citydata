@@ -1,17 +1,23 @@
-<ng-controller ng-controller="DataController" id='data' >
-                <div class="col-lg-4 col-md-5 col-xs-12">
-                    <div class="row logo-space">
+    <ng-controller ng-controller="DataController" id='data' >
+        <div class="nav-toggle col-lg-1">
+        <span href="#" id="navigation-toggle"  ng-click="isAddFormOpen = !isAddFormOpen">
+            <div></div>
+            <div></div>
+            <div></div>
+        </span>
+        </div>
+                <div class="col-lg-4 col-md-5 col-xs-12" ng-show="isAddFormOpen" ng-init="isAddFormOpen=true" style="background-color: #0b164e;">
+                    <div class="row logo-space" >
                         <img class="logo" src="img/logo.png">
                     </div>
 
                     <div class="row">
                         <div class="col-xs-offset-1 col-xs-10">
-                            <div class="row" style="color: #ddd;    font-weight: bold;">
+                            <div class="row" style="color: #ddd; font-weight: bold;">
                                 <div ng-repeat="family in familiesList">
-                                        <div class="col-xs-6 checkboxs">
-                                            <input type="radio" name="famille" ng-model="selected" value="{{family}}" ng-change="getChecked(selected)"/>{{family.description}}
+                                        <div class="col-xs-6 radio">
+                                            <label><input type="radio" name="famille" ng-model="selected" value="{{family}}" ng-change="getChecked(selected)"/>{{family.description}}</label>
                                             <!--<input type="checkbox" checklist-model="selected.families" checklist-value="family"/> {{family.description}}-->
-                                            <br/>
                                         </div>
                                 </div>
                             </div><br/>
@@ -20,20 +26,21 @@
 
                     <div class="row bottom-menu">
                         <div class="col-xs-offset-1 col-xs-10">
-                            <a class="btn btn-block" ng-href="#!/point">Ajouter un point</a>
-                        </div><br/><br/>
-
-                        <div class="col-xs-offset-1 col-xs-10">
                             <a class="btn btn-block" ng-click="openOptionsModal()">Options</a>
-                        </div><br/><br/>
-
+                        </div>
                         <div class="col-xs-offset-1 col-xs-10">
-                            <button class="btn btn-block" ng-click="">S'authentifier</button>
+                            <a class="btn col-xs-12" ng-href="#!/point">Ajouter un point</a>
+                        </div>
+                        <div class="col-xs-offset-1 col-xs-10">
+                            <a class="btn col-xs-12" ng-href="#!">S'authentifier</a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-8 col-md-7 col-xs-12">
+                <div 
+                ng-class="{'col-lg-7 col-md-7 col-xs-12' : isAddFormOpen , 'col-lg-11' : !isAddFormOpen}"
+                 style="position: absolute;
+    z-index: -1;">
                      <leaflet class="map" lf-center="center" legend="legend" defaults="defaults" event-broadcast="events" height={{height}} width={{width}} center="center" geojson="geojson" markers="markers" paths="paths" tiles="tiles" ></leaflet>
                </div>
             </ng-controller>

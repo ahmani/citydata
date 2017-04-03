@@ -10,7 +10,7 @@
         <script src="bower_components/jquery/jquery.js"></script>
         <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
     </head>
-    <body class="container-fluid" style="background-color: #0b164e;">
+    <body class="container-fluid" >
         <div class="row">
              <ng-view></ng-view>
         </div>
@@ -56,23 +56,33 @@
             <div class="row">
                 <div class="col-lg-push-1 col-sm-push-1 col-lg-10 col-sm-10">
                     <div class="make-switch switch-large">
-                        <label>Afficher les Marqueurs de la carte</label>
-                        <label class="switch">
-                            <input type="checkbox" ng-change="GetChecked()" ng-model="check_markers" checked />
-                            <div class="slider round"></div>
-                        </label>
+                        <div class="custom-label">
+                            <label>Afficher les Marqueurs de la carte</label>
+                        </div>
+                         <div class="custom-progress">
+                            <label class="switch">
+                                <input type="checkbox" ng-change="GetChecked()" ng-model="check_markers" />
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
                     </div>
                     <div class="make-switch switch-large">
-                        <label>Afficher les arrêts de bus</label>
-                        <label class="switch">
-                            <input type="checkbox" ng-change="" ng-model="" checked />
-                            <div class="slider round"></div>
-                        </label>
+                        <div class="custom-label">
+                            <label>Afficher les arrêts de bus</label>
+                        </div>
+                        <div class="custom-progress">
+                            <label class="switch">
+                                <input type="checkbox"  />
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
                     </div>
                     <div class="make-switch switch-large">
-                        <label>Afficher les vélos Stan</label>
+                        <div class="custom-label">
+                            <label>Afficher les vélos Stan</label>
+                        </div>
                         <label class="switch">
-                            <input type="checkbox" ng-change="" ng-model="" checked />
+                            <input type="checkbox" ng-change="GetChecked()" ng-model="velo" />
                             <div class="slider round"></div>
                         </label>
                     </div>
@@ -91,10 +101,11 @@
          <script src="app/controller/families_controller.js"></script>
         <script src="app/controller/points_controller.js"></script>
         <script src="app/factory/areas_factory.js"></script>
+        <script src="app/factory/services_factory.js"></script>
         <script src="app/factory/geographical_data_factory.js"></script>
-        <script src="app/factory/area_services_factory.js"></script>
         <script src="app/factory/public_areas_factory.js"></script>
         <script src="app/factory/data_factory.js"></script>
         <script src="app/factory/families_factory.js"></script>
+        <script src="app/factory/velo_factory.js"></script>
         <script src="lib/checklist-model.js"></script>
 </html>

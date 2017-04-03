@@ -1,5 +1,5 @@
-angular.module('app').controller('PointsController',['API_URL','$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory', 'GeographicalData',
-                function(API_URL,$rootScope,$scope, $http, AreaFactory, PublicAreasFactory, GeographicalData) {
+angular.module('app').controller('PointsController',['$rootScope','$scope', '$http', 'ServicesFactory', 'AreaFactory','PublicAreasFactory', 'GeographicalData',
+                function($rootScope,$scope, $http, ServicesFactory, AreaFactory, PublicAreasFactory, GeographicalData) {
 
     angular.extend($scope, {
       height: 500,
@@ -26,8 +26,7 @@ angular.module('app').controller('PointsController',['API_URL','$rootScope','$sc
     });
 
 
-    // Services
-    $http.get(API_URL+'services').then (function (response) {
+    ServicesFactory.all().then(function(response) {
       $scope.services = new Array;
       //console.log(levelResponse.data.level);
       response.data.forEach( function (service){
@@ -35,16 +34,22 @@ angular.module('app').controller('PointsController',['API_URL','$rootScope','$sc
         $scope.selectedService = $scope.services[0];
       });
       //console.log($scope.levels);
-
     },
     function (error) {
       console.log(error);
     });
 
+
     $scope.createPoint = function (){
       data = { "lat" : $scope.lat, "lng" : $scope.lng, "description": $scope.pointDescription, "area" : $scope.areaId, "service" : $scope.selectedService };
-      GeographicalData.AddData(data).then (function (response) {
-        console.log(response);
+      GeographicalData.addData(data).then (function (response) {
+        //console.log(response);
+        $("#alert-success").show().delay(2000).fadeOut()
+        $scope.lat = "";
+        $scope.lng = "";
+        $scope.pointDescription = "";
+        $scope.selectedService.id = 1;
+        $scope.markers.pop();
       });
     };
 

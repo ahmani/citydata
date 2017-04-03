@@ -1,5 +1,5 @@
-angular.module('app').controller('DataController',['$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 'DataFactory', 'FamiliesFactory',
-                function($rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory, DataFactory, FamiliesFactory) {
+angular.module('app').controller('DataController',['VeloFactory','$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 'DataFactory', 'FamiliesFactory',
+                function(VeloFactory,$rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory, DataFactory, FamiliesFactory) {
 
     $scope.markers = [];
     areas =[];
@@ -9,6 +9,10 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     $rootScope.percents = []
     $scope.selected = {};
     $scope.selectedareas = [];
+
+
+      
+  
 
     var getModal = function () {
             return {
@@ -66,13 +70,31 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
             {
                 return {
                     savefunction : Getmarkers,
-                    removefunction : Removemarkers
+                    removefunction : Removemarkers,
+                    velosfunction : Getvelos
                 }
             }
         }
         $uibModal.open(template);
     }
 
+    var Getvelos = function()
+    {
+                VeloFactory.all().then(function(response){
+                    response.data.forEach( function (d) {
+                        $scope.markers.push({
+                            lat: parseFloat(d.position.lat),
+                            lng: parseFloat(d.position.lng),
+                            //message: d.description,
+                            icon : {
+                                    iconUrl: 'http://www.icone-png.com/png/10/10375.png',
+                                    iconSize:     [26, 26],
+                                } 
+                            
+                        });
+                    });
+                });
+    }
     var Removemarkers = function()
     {
         $scope.markers = [];
@@ -81,16 +103,19 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     {
          var template = getModal();
          $rootScope.area = area.properties.id_area
+
          $rootScope.percentages = []
          $uibModal.open(template);
-         ServicesFactory.ServicesByArea($rootScope.area).then (function (response) {
-            $rootScope.services_family = response.data
+
+         ServicesFactory.servicesByArea($rootScope.area).then (function (response) {
+             //console.log(response.data)
+             $rootScope.services_family = response.data
             /*response.data.forEach(function(d)
             {
                 $rootScope.percentages.push( Math.round((d.pivot.number /n)*100) )
-            
+
             })*/
-           
+
          });
     };
 
@@ -114,7 +139,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
       }
     };
 
-    var getStyle = function(feature){        
+    var getStyle = function(feature){
         return {
             fillColor: getColor(feature.properties.number / n * 100),
             weight: 2,
@@ -144,6 +169,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
         });
     }
 
+
     var Getmarkers = function()
     {
         if($scope.selectedareas.length > 0)
@@ -155,11 +181,11 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                         lat: parseFloat(d.latitude),
                         lng: parseFloat(d.longitude),
                         message: d.description,
-                        icon : Geticon(d.id_family)
+                        icon : Geticon(parseInt(d.id_family))
                     });
                 });
             });
-        }    
+        }
     }
 
     var Geticon = function(id_family)
@@ -189,7 +215,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
                     iconSize:     [26, 26],
                 }
       }
-        
+
         return icon;
     }
 
@@ -197,7 +223,6 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     $scope.init = function() {
 
         getFamilies();
-        console.log($scope)
         //call the factory one time, put data in Array
         PublicAreasFactory.all().then (function (response) {
 
@@ -235,8 +260,8 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
            "type": "FeatureCollection",
            "features": features
         };
-        
-        //Getmarkers();
+
+        Getmarkers();
         $scope.geojson = createGeoJsonObject(data);
       },
       function (error) {
@@ -245,8 +270,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
     }
 
     angular.extend($scope, {
-      height: 500,
-      width: 900,
+      
       center: {
             lat: 48.69,
             lng: 6.182,
@@ -255,7 +279,7 @@ angular.module('app').controller('DataController',['$rootScope','$scope', '$http
       legend: {
             position: 'bottomleft',
             colors: [ 'blue',"green", 'yellow', 'orange', 'red' ],
-            labels: [ ' < 5%', '< 10%','< 20%', '< 50%', '< 100%' ]
+            labels: [ '0% < n < 5%', '5% < n < 10%', '10% < n < 20%', '20% < n < 50%', '50% < n < 100%' ]
       },
       defaults: {
             doubleClickZoom: false,
