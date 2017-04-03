@@ -85,7 +85,8 @@ angular.module('app').controller('DataController',['VeloFactory','$rootScope','$
                         $scope.markers.push({
                             lat: parseFloat(d.position.lat),
                             lng: parseFloat(d.position.lng),
-                            //message: d.description,
+                            message: "Adresse : " + d.address + "<br /> Stand de vélo disponible :" + d.available_bike_stands
+                                        + "<br />Vélo disponible : " + d.available_bikes,
                             icon : {
                                     iconUrl: 'http://www.icone-png.com/png/10/10375.png',
                                     iconSize:     [26, 26],

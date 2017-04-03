@@ -21,8 +21,17 @@
     width: 100% !important;
     height: 100vh !important;
 }
+.map-container
+{
+        padding: 0px;
+}
+.leaflet-left .leaflet-control {
+    margin-left: 100px !important;
+}
 
-
+label.control-label {
+    color: white;
+}
 
 .logo {
     border-radius: 50%;
@@ -78,6 +87,19 @@ a.btn:hover {
     width: 46%;
     float: left;
     display: inline-block;
+}
+
+.options .custom-label {
+    width:  65%;
+}
+
+.options .custom-progress
+{
+    width: 20%;
+}
+
+.options{
+    margin-bottom: 10px
 }
 .progress {
     height: 25px;
@@ -167,7 +189,7 @@ input:checked + .slider:before {
                     float: left;
                     color: white;
                     text-decoration: none;
-                    padding: 20px;
+                    padding: 11px;
                     position: absolute;
                     z-index: 999;
 
@@ -202,7 +224,16 @@ input:checked + .slider:before {
             .nav-toggle
             {
                     height: 100%;
-                    width: 7%;
+                    z-index: 9999;
+                    width: 6%;
                     position: absolute;
                     background: rgb(11, 22, 78);
+            }
+            .blue-sidebar {
+                background-color: #0b164e;
+            }
+            .famille_check
+            {
+                color: #ddd; 
+                font-weight: bold;
             }

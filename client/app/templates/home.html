@@ -6,14 +6,14 @@
             <div></div>
         </span>
         </div>
-                <div class="col-lg-4 col-md-5 col-xs-12" ng-show="isAddFormOpen" ng-init="isAddFormOpen=true" style="background-color: #0b164e;">
+                <div class="col-lg-4 col-md-5 col-xs-12 blue-sidebar" ng-show="isAddFormOpen" ng-init="isAddFormOpen=true" >
                     <div class="row logo-space" >
                         <img class="logo" src="img/logo.png">
                     </div>
 
                     <div class="row">
-                        <div class="col-xs-offset-1 col-xs-10">
-                            <div class="row" style="color: #ddd; font-weight: bold;">
+                        <div class="col-xs-offset-2 col-xs-10">
+                            <div class="row famille_check" >
                                 <div ng-repeat="family in familiesList">
                                         <div class="col-xs-6 radio">
                                             <label><input type="radio" name="famille" ng-model="selected" value="{{family}}" ng-change="getChecked(selected)"/>{{family.description}}</label>
@@ -37,10 +37,7 @@
                     </div>
                 </div>
 
-                <div 
-                ng-class="{'col-lg-7 col-md-7 col-xs-12' : isAddFormOpen , 'col-lg-11' : !isAddFormOpen}"
-                 style="position: absolute;
-    z-index: -1;">
+                <div class="map-container" ng-class="{'col-lg-7 col-md-7 col-xs-12' : isAddFormOpen , 'col-lg-11' : !isAddFormOpen}">
                      <leaflet class="map" lf-center="center" legend="legend" defaults="defaults" event-broadcast="events" height={{height}} width={{width}} center="center" geojson="geojson" markers="markers" paths="paths" tiles="tiles" ></leaflet>
                </div>
             </ng-controller>

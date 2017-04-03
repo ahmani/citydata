@@ -1,5 +1,5 @@
-angular.module('app').controller('PointsController',['$rootScope','$scope', '$http', 'ServicesFactory', 'AreaFactory','PublicAreasFactory', 'GeographicalData',
-                function($rootScope,$scope, $http, ServicesFactory, AreaFactory, PublicAreasFactory, GeographicalData) {
+angular.module('app').controller('PointsController',['API_URL','$rootScope','$scope', '$http', 'ServicesFactory', 'AreaFactory','PublicAreasFactory', 'GeographicalData',
+                function(API_URL,$rootScope,$scope, $http, ServicesFactory, AreaFactory, PublicAreasFactory, GeographicalData) {
 
     angular.extend($scope, {
       height: 500,
@@ -93,7 +93,7 @@ angular.module('app').controller('PointsController',['$rootScope','$scope', '$ht
 
     var getStyle = function(feature){
         return {
-            fillColor: 'yellow',
+            fillColor: 'white',
             weight: 2,
             opacity: 0.3,
             color: 'white',
