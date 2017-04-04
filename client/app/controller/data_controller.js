@@ -266,6 +266,36 @@ angular.module('app').controller('DataController',['leafletData', 'StationsFacto
                     iconSize:     [26, 26],
                 }
                 break;
+            case (14):
+                var icon = {
+                    iconUrl: 'img/icons/scool.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            case (15):
+                var icon = {
+                    iconUrl: 'img/icons/scool.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            case (16):
+                var icon = {
+                    iconUrl: 'img/icons/scool.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            case (17):
+                var icon = {
+                    iconUrl: 'img/icons/scool.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            case (18):
+                var icon = {
+                    iconUrl: 'img/icons/scool.png',
+                    iconSize:     [26, 26],
+                }
+                break;
             default:
                 var icon = {
                     iconUrl: 'https://lh4.ggpht.com/Tr5sntMif9qOPrKV_UVl7K8A_V3xQDgA7Sw_qweLUFlg76d_vGFA7q1xIKZ6IcmeGqg=w300',
