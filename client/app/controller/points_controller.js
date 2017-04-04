@@ -93,7 +93,7 @@ angular.module('app').controller('PointsController',['API_URL','$rootScope','$sc
 
     var getStyle = function(feature){
         return {
-            fillColor: 'white',
+            fillColor: 'yellow',
             weight: 2,
             opacity: 0.3,
             color: 'white',
