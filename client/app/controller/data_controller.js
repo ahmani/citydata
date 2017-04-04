@@ -254,6 +254,12 @@ angular.module('app').controller('DataController',['leafletData', 'StationsFacto
                     iconSize:     [26, 26],
                 }
                 break;
+            case (2):
+                var icon = {
+                    iconUrl: 'img/icons/bus.png',
+                    iconSize:     [26, 26],
+                }
+                break;
             case (3):
                 var icon = {
                     iconUrl: 'img/icons/supermarket-icon.png',
@@ -263,6 +269,36 @@ angular.module('app').controller('DataController',['leafletData', 'StationsFacto
             case (5):
                 var icon = {
                     iconUrl: 'img/icons/petit-commerce-icon.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            case (14):
+                var icon = {
+                    iconUrl: 'img/icons/scool.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            case (15):
+                var icon = {
+                    iconUrl: 'img/icons/scool.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            case (16):
+                var icon = {
+                    iconUrl: 'img/icons/scool.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            case (17):
+                var icon = {
+                    iconUrl: 'img/icons/scool.png',
+                    iconSize:     [26, 26],
+                }
+                break;
+            case (18):
+                var icon = {
+                    iconUrl: 'img/icons/scool.png',
                     iconSize:     [26, 26],
                 }
                 break;
