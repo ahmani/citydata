@@ -16,21 +16,21 @@ angular.module('app')
         {
           $scope.markers_checked = $scope.check_markers
           if($scope.check_markers)
-            items.savefunction()
+            {
+              items.savefunction()
               if($scope.velo)
                 items.velosfunction()
+            }
           if($scope.check_markers == false)
             items.removefunction()
         }
 
         $scope.GetCheckedStation = function()
         {
-          // if($scope.check_markers)
-          //   items.savestationfunction()
-          //     if($scope.station)
-          //       items.stationfunction()
-          // if($scope.check_markers == false)
-          //   items.removestationfunction()
+          if($scope.station)
+            items.stationsfunction();
+          if($scope.station == false)
+            items.removefunction();
         }
 
 

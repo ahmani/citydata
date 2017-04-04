@@ -72,7 +72,8 @@ angular.module('app').controller('DataController',['leafletData', 'StationsFacto
                 return {
                     savefunction : Getmarkers,
                     removefunction : Removemarkers,
-                    velosfunction : Getvelos
+                    velosfunction : Getvelos,
+                    stationsfunction : Getstation
                 }
             }
         }
@@ -144,9 +145,10 @@ angular.module('app').controller('DataController',['leafletData', 'StationsFacto
       markers.addLayer(geoJsonLayer);
       leafletData.getMap().then(function(map) {
         map.addLayer(markers);
-        //map.fitBounds(markers.getBounds());
       });
     }
+
+
 
 
 
@@ -317,7 +319,7 @@ angular.module('app').controller('DataController',['leafletData', 'StationsFacto
         };
 
         Getmarkers();
-        Getstation();
+        //Getstation();
         $scope.geojson = createGeoJsonObject(data);
       },
       function (error) {

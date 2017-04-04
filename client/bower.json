@@ -21,6 +21,8 @@
     "angular-animate": "^1.6.2",
     "angular-bootstrap": "^2.5.0",
     "angular-ui-router": "^0.4.2",
-    "bootstrap-switch": "^3.3.4"
+    "bootstrap-switch": "^3.3.4",
+    "Leaflet.markercluster": "1.0.3",
+    "leaflet.markercluster": "Leaflet.markercluster#1.0.3"
   }
 }
