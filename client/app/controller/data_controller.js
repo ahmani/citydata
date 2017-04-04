@@ -254,6 +254,12 @@ angular.module('app').controller('DataController',['leafletData', 'StationsFacto
                     iconSize:     [26, 26],
                 }
                 break;
+            case (2):
+                var icon = {
+                    iconUrl: 'img/icons/bus.png',
+                    iconSize:     [26, 26],
+                }
+                break;
             case (3):
                 var icon = {
                     iconUrl: 'img/icons/supermarket-icon.png',
