@@ -21,9 +21,16 @@
     width: 100% !important;
     height: 100vh !important;
 }
+.map-container
+{
+        padding: 0px;
+}
+.leaflet-left .leaflet-control {
+    margin-left: 100px !important;
+}
 
-body {
-    background-color: #4887bd;
+label.control-label {
+    color: white;
 }
 
 .logo {
@@ -81,6 +88,19 @@ a.btn:hover {
     float: left;
     display: inline-block;
 }
+
+.options .custom-label {
+    width:  65%;
+}
+
+.options .custom-progress
+{
+    width: 20%;
+}
+
+.options{
+    margin-bottom: 10px
+}
 .progress {
     height: 25px;
 }
@@ -100,3 +120,120 @@ a.btn:hover {
     height: 540px;
     overflow-y: scroll;
 }
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+.sidebar {
+                position : absolute;
+                top : 0;
+                left : -160px;;
+                transition : 100ms left;
+            }
+            #navigation-toggle {
+                    float: left;
+                    color: white;
+                    text-decoration: none;
+                    padding: 11px;
+                    position: absolute;
+                    z-index: 999;
+
+            }
+            .show {
+                left : 0;
+            }
+            .navigation {
+                list-style : none;
+                padding : 0;
+                margin : 0;
+            }
+            .navigation-items a {
+                display : block;
+                background-color : #444;
+                color : white;
+                line-height : 2em;
+                text-decoration : none;
+                padding : 10px 30px;
+                width : 100px;
+
+            }
+            .navigation-items a:hover {
+                background-color : #222;
+            }
+            #navigation-toggle div{
+                    width: 29px;
+                    height: 3px;
+                    background-color: white;
+                    margin: 6px 0;
+            }
+            .nav-toggle
+            {
+                    height: 100%;
+                    z-index: 9999;
+                    width: 6%;
+                    position: absolute;
+                    background: rgb(11, 22, 78);
+            }
+            .blue-sidebar {
+                background-color: #0b164e;
+            }
+            .famille_check
+            {
+                color: #ddd; 
+                font-weight: bold;
+            }

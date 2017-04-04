@@ -1,5 +1,5 @@
-angular.module('app').controller('PointsController',['$rootScope','$scope', '$http', 'ServicesFactory', 'AreaFactory','PublicAreasFactory', 'GeographicalData',
-                function($rootScope,$scope, $http, ServicesFactory, AreaFactory, PublicAreasFactory, GeographicalData) {
+angular.module('app').controller('PointsController',['API_URL','$rootScope','$scope', '$http', 'ServicesFactory', 'AreaFactory','PublicAreasFactory', 'GeographicalData',
+                function(API_URL,$rootScope,$scope, $http, ServicesFactory, AreaFactory, PublicAreasFactory, GeographicalData) {
 
     angular.extend($scope, {
       height: 500,
@@ -24,6 +24,7 @@ angular.module('app').controller('PointsController',['$rootScope','$scope', '$ht
       },
       markers:{}
     });
+
 
     ServicesFactory.all().then(function(response) {
       $scope.services = new Array;
@@ -92,7 +93,7 @@ angular.module('app').controller('PointsController',['$rootScope','$scope', '$ht
 
     var getStyle = function(feature){
         return {
-            fillColor: 'yellow',
+            fillColor: 'white',
             weight: 2,
             opacity: 0.3,
             color: 'white',
@@ -119,7 +120,7 @@ angular.module('app').controller('PointsController',['$rootScope','$scope', '$ht
       var features = new Array;
       var areas = new Array;
 
-      $http.get('http://project2.local/citydata/api/rest/areas').then(function(response) {
+      $http.get(API_URL + 'areas').then(function(response) {
         areas = response.data;
 
         //call the factory one time, put data in Array
