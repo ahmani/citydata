@@ -82,6 +82,10 @@ a.btn:hover {
 .custom-progress {
     width: 50%;
     display: inline-block;
+   margin-bottom: 18px;
+}
+.progress {
+    margin-bottom: 0px !important;
 }
 .custom-label {
     width: 46%;
@@ -235,5 +239,11 @@ input:checked + .slider:before {
             .famille_check
             {
                 color: #ddd; 
+                font-weight: bold;
+            }
+            .radio, .checkbox {
+                margin-bottom: 0px;
+            }
+            .radio label, .checkbox label {
                 font-weight: bold;
             }
