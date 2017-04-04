@@ -422,4 +422,20 @@ class PublicController extends AbstractController
           return $this->json_success($res, 200, json_encode($data));
 
     }
+
+    public function getGeographicalDataByService($req,$res,$args){
+      try {
+        $ga = Geographical_data::where("id_service", "=", $args["id"])->get();
+
+        //var_dump($s); die();
+        return $this->json_success($res, 200, json_encode($ga));
+
+      } catch (ModelNotFoundException $e) {
+
+        return $this->json_error($res, 404, "Ressource Not found");
+      }
+
+
+    }
+
 }

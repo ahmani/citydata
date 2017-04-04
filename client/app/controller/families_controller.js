@@ -2,7 +2,7 @@ angular.module('app')
     .controller('FamiliesController',
     ['$scope', '$http', 'items', 'VeloFactory',
     function($scope, $http, items, VeloFactory) {
-      
+
         $scope.markers_checked = true
 
 
@@ -23,7 +23,15 @@ angular.module('app')
             items.removefunction()
         }
 
+        $scope.GetCheckedStation = function()
+        {
+          // if($scope.check_markers)
+          //   items.savestationfunction()
+          //     if($scope.station)
+          //       items.stationfunction()
+          // if($scope.check_markers == false)
+          //   items.removestationfunction()
+        }
 
-      
 
   }]);
