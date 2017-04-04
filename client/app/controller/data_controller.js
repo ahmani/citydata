@@ -1,7 +1,8 @@
-angular.module('app').controller('DataController',['VeloFactory','$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 'DataFactory', 'FamiliesFactory',
-                function(VeloFactory,$rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory, DataFactory, FamiliesFactory) {
+angular.module('app').controller('DataController',['leafletData', 'StationsFactory','VeloFactory','$rootScope','$scope', '$http', 'AreaFactory','PublicAreasFactory','$uibModal', 'ServicesFactory', 'DataFactory', 'FamiliesFactory',
+                function(leafletData, StationsFactory, VeloFactory,$rootScope,$scope, $http, AreaFactory, PublicAreasFactory, $uibModal, ServicesFactory, DataFactory, FamiliesFactory) {
 
     $scope.markers = [];
+    $scope.geojson = [];
     areas =[];
     $scope.selected = {
         families: []
@@ -11,8 +12,8 @@ angular.module('app').controller('DataController',['VeloFactory','$rootScope','$
     $scope.selectedareas = [];
 
 
-      
-  
+
+
 
     var getModal = function () {
             return {
@@ -64,7 +65,7 @@ angular.module('app').controller('DataController',['VeloFactory','$rootScope','$
 
     $scope.openOptionsModal = function()
     {
-        var template = getOpitonsModal();  
+        var template = getOpitonsModal();
         template.resolve = {
             'items' : function()
             {
@@ -90,12 +91,65 @@ angular.module('app').controller('DataController',['VeloFactory','$rootScope','$
                             icon : {
                                     iconUrl: 'http://www.icone-png.com/png/10/10375.png',
                                     iconSize:     [26, 26],
-                                } 
-                            
+                                }
+
                         });
                     });
                 });
     }
+
+
+    var Getstation = function()
+    {
+                StationsFactory.all().then(function(response){
+                    var features = new Array;
+
+                    response.data.forEach( function (d) {
+                        var coordinates = new Array;
+                        coordinates[0] = d.longitude;
+                        coordinates[1] = d.latitude;
+
+
+                        features.push({
+                          "type": "Feature",
+                          "properties": {
+                            "name" : d.description,
+                            "category" : "Bus Stop"
+                          },
+                          "geometry": {
+                            "type": "Point",
+                            "coordinates": coordinates
+                          }
+                        });
+                      });
+
+                      var data = {
+                         "type": "FeatureCollection",
+                         "features": features
+                      };
+
+
+                        addGeoJsonLayerWithClustering(data);
+                });
+    }
+
+
+    function addGeoJsonLayerWithClustering(data) {
+      var markers = L.markerClusterGroup();
+      var geoJsonLayer = L.geoJson(data, {
+          onEachFeature: function (feature, layer) {
+              layer.bindPopup(feature.properties.name);
+          }
+      });
+      markers.addLayer(geoJsonLayer);
+      leafletData.getMap().then(function(map) {
+        map.addLayer(markers);
+        //map.fitBounds(markers.getBounds());
+      });
+    }
+
+
+
     var Removemarkers = function()
     {
         $scope.markers = [];
@@ -157,7 +211,7 @@ angular.module('app').controller('DataController',['VeloFactory','$rootScope','$
                  style: getStyle
              };
     };
-    
+
     $scope.getChecked = function(selected)
     {
         $scope.selected = selected;
@@ -190,7 +244,7 @@ angular.module('app').controller('DataController',['VeloFactory','$rootScope','$
     }
 
     var Geticon = function(id_family)
-    {   
+    {
         switch(id_family) {
             case (1):
                var icon = {
@@ -234,7 +288,7 @@ angular.module('app').controller('DataController',['VeloFactory','$rootScope','$
         response.data.records.forEach (function (record) {
             if(areas.length > 0){
             $scope.selectedareas = areas
-            
+
             areas.forEach( function (area) {
               if (area.code == record.fields.iris){
                     if(record.fields.geo_shape.coordinates.length == 1){
@@ -263,6 +317,7 @@ angular.module('app').controller('DataController',['VeloFactory','$rootScope','$
         };
 
         Getmarkers();
+        Getstation();
         $scope.geojson = createGeoJsonObject(data);
       },
       function (error) {
@@ -271,7 +326,7 @@ angular.module('app').controller('DataController',['VeloFactory','$rootScope','$
     }
 
     angular.extend($scope, {
-      
+
       center: {
             lat: 48.69,
             lng: 6.182,

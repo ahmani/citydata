@@ -42,9 +42,10 @@ $app->group('/admin', function (){
 
 $app->group('/geographical-data', function (){
       $this->post('', PublicController::class. ':addGeographicalData');
+      $this->get('/services/{id}', PublicController::class. ':getGeographicalDataByService');
 });
 
 $app->group('/data', function (){
       $this->post('', PublicController::class. ':getGeographicalData')->setName('ListGeographicalData');
-      
+
 });
