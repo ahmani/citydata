@@ -4,6 +4,7 @@ angular.module('app')
     function($scope, $http, items, VeloFactory) {
 
         $scope.markers_checked = true
+        $scope.velo_checked = false
 
 
         $scope.$watch(function(){
@@ -16,11 +17,14 @@ angular.module('app')
         {
           $scope.markers_checked = $scope.check_markers
           if($scope.check_markers)
-            {
               items.savefunction()
-              if($scope.velo)
-                items.velosfunction()
+          if($scope.velo)
+            {
+              items.velosfunction()
+              $scope.velo_checked = true
             }
+            
+
           if($scope.check_markers == false)
             items.removefunction()
         }
