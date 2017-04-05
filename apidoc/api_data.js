@@ -296,6 +296,63 @@ define({ "api": [
   },
   {
     "group": "Families",
+    "name": "DeleteFamily",
+    "version": "0.1.0",
+    "type": "delete",
+    "url": "admin/families/{id}",
+    "title": "Suppression d'une famille",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "description": "<p>Supprimer une famille Supprimer une famille dans la base</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Identifiant unique de la famille</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "exemple de réponse en cas de succès",
+          "content": "HTTP/1.1 404 Deleted\n{\n      \"Deletion done\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Erreur : 404": [
+          {
+            "group": "Erreur : 404",
+            "optional": false,
+            "field": "NotFound",
+            "description": "<p>No query results</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "exemple de réponse en cas d'erreur",
+          "content": "HTTP/1.1 404 Not Found\n{\n      \"Error\" : \"Id not found\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "api/src/routes/route.php",
+    "groupTitle": "Families"
+  },
+  {
+    "group": "Families",
     "name": "GetFamilies",
     "version": "0.1.0",
     "type": "get",
@@ -365,7 +422,7 @@ define({ "api": [
     "type": "get",
     "url": "/families/{id}",
     "title": "Accès à une ressource family",
-    "description": "<p>Accès à une ressource de type family permet d'accéder à la représentation de la ressource family désignée. Retourne une représentation json de la ressource, incluant son id, description et color.</p>",
+    "description": "<p>Accès à une ressource de type family.<br/> Permet d'accéder à la représentation de la ressource family désignée. Retourne une représentation json de la ressource, incluant son id, description et color.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -563,12 +620,227 @@ define({ "api": [
     "groupTitle": "Families"
   },
   {
+    "group": "Geographical_data",
+    "name": "AddGeographicalData",
+    "version": "0.1.0",
+    "type": "post",
+    "url": "/geographical-data",
+    "title": "Création d'une ressource geographical-data",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "description": "<p>Création d'une ressource de type Geographical-data La ressource est ajouté dans la base, son id est créé. La longitude, latitude, description, id_area et id_service doivent être fournis</p>",
+    "parameter": {
+      "fields": {
+        "request parameters": [
+          {
+            "group": "request parameters",
+            "type": "String",
+            "optional": false,
+            "field": "longitude",
+            "description": "<p>Longitude de la donnée géoraphique</p>"
+          },
+          {
+            "group": "request parameters",
+            "type": "String",
+            "optional": false,
+            "field": "latitude",
+            "description": "<p>Latitude de la donnée géoraphique</p>"
+          },
+          {
+            "group": "request parameters",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Description de la donnée géoraphique</p>"
+          },
+          {
+            "group": "request parameters",
+            "type": "Number",
+            "optional": false,
+            "field": "id_area",
+            "description": "<p>Identifiant de l'area de la donnée géoraphique</p>"
+          },
+          {
+            "group": "request parameters",
+            "type": "Number",
+            "optional": false,
+            "field": "id_service",
+            "description": "<p>Identifiant du service de la donnée géoraphique</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "exemple de paramètres",
+          "content": "{\n      \"longitude\"             : \"6.160913499999992\",\n      \"latitude\"              : \"48.6849702\",\n      \"description\"           : \"Supermarchés Match\",\n      \"id_area\"               : 12,\n      \"id_service\"            : 2\n}",
+          "type": "request"
+        }
+      ]
+    },
+    "header": {
+      "fields": {
+        "request headers": [
+          {
+            "group": "request headers",
+            "type": "String",
+            "optional": false,
+            "field": "Content-Type:",
+            "defaultValue": "application/json",
+            "description": "<p>format utilisé pour les données transmises</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Réponse : 201": [
+          {
+            "group": "Réponse : 201",
+            "type": "json",
+            "optional": false,
+            "field": "service",
+            "description": "<p>représentation json du nouveau service</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "exemple de réponse en cas de succès",
+          "content": "{\n      \"id\"                    : \"1\"\n      \"longitude\"             : \"6.160913499999992\",\n      \"latitude\"              : \"48.6849702\",\n      \"description\"           : \"Supermarchés Match\",\n      \"id_area\"               : 12,\n      \"id_service\"            : 2\n}",
+          "type": "response"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Réponse : 500": [
+          {
+            "group": "Réponse : 500",
+            "optional": false,
+            "field": "InternalServerError",
+            "description": "<p>Erreur interne du serveur.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "api/src/routes/route.php",
+    "groupTitle": "Geographical_data"
+  },
+  {
+    "group": "Geographical_data",
+    "name": "GetGeographicalDataByService",
+    "version": "0.1.0",
+    "type": "get",
+    "url": "/geographical-data/services/{id}",
+    "title": "Accès à une table de données géographique d'un service désigné",
+    "description": "<p>Accès à une table de données géographique d'un service désigné.<br/> Retourne cette table, incluant un ensemble de ressources de type geographical-data avec leurs id, longitude, latitude, description, id_area et id_service.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Identifiant unique de la donnée géoraphique</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "request parameters": [
+          {
+            "group": "request parameters",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Identifiant de la donnée géoraphique</p>"
+          },
+          {
+            "group": "request parameters",
+            "type": "String",
+            "optional": false,
+            "field": "longitude",
+            "description": "<p>Longitude de la donnée géoraphique</p>"
+          },
+          {
+            "group": "request parameters",
+            "type": "String",
+            "optional": false,
+            "field": "latitude",
+            "description": "<p>Latitude de la donnée géoraphique</p>"
+          },
+          {
+            "group": "request parameters",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Description de la donnée géoraphique</p>"
+          },
+          {
+            "group": "request parameters",
+            "type": "Number",
+            "optional": false,
+            "field": "id_area",
+            "description": "<p>Identifiant de l'area de la donnée géoraphique</p>"
+          },
+          {
+            "group": "request parameters",
+            "type": "Number",
+            "optional": false,
+            "field": "id_service",
+            "description": "<p>Identifiant du service de la donnée géoraphique</p>"
+          }
+        ],
+        "Succès : 200": [
+          {
+            "group": "Succès : 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "table",
+            "description": "<p>Table de données géographique (geographical-data)</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "exemple de réponse en cas de succès",
+          "content": "HTTP/1.1 200 OK\n\n  [\n        {\n              \"id\": 4,\n              \"longitude\": \"6.163000499999953\",\n              \"latitude\": \"48.6960295\",\n              \"description\": \"Boulangerie Pâtisserie Seckinger\",\n              \"id_area\": 8,\n              \"id_service\": 6\n        },\n        {\n              \"id\": 5,\n              \"longitude\": \"6.166817499999979\",\n              \"latitude\": \"48.6853999\",\n              \"description\": \"La Place Du Pain\",\n              \"id_area\": 13,\n              \"id_service\": 6\n        }\n  ]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Erreur : 404": [
+          {
+            "group": "Erreur : 404",
+            "optional": false,
+            "field": "NotFound",
+            "description": "<p>No query results</p>"
+          }
+        ]
+      }
+    },
+    "filename": "api/src/routes/route.php",
+    "groupTitle": "Geographical_data"
+  },
+  {
     "group": "Services",
     "name": "DeleteService",
     "version": "0.1.0",
     "type": "delete",
     "url": "/services/{id}",
     "title": "Suppression d'un service",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "description": "<p>Supprimer un service Supprimer un service dans la base</p>",
     "parameter": {
       "fields": {
@@ -832,6 +1104,11 @@ define({ "api": [
     "type": "put",
     "url": "/services/{id}",
     "title": "Modification d'un service",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "description": "<p>Modification d'un service désigné</p>",
     "parameter": {
       "fields": {
@@ -909,6 +1186,11 @@ define({ "api": [
     "type": "post",
     "url": "/services",
     "title": "Création d'une ressource service",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "description": "<p>Création d'une ressource de type Service Le service est ajouté dans la base, son id est créé. Le titre et l'id de la famille du service doivent être fournis</p>",
     "parameter": {
       "fields": {
