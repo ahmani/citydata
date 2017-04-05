@@ -3,7 +3,7 @@ var app = angular.module("app", ['ngAnimate', 'leaflet-directive','ui.bootstrap'
 
 
 
-app.constant('API_URL', 'http://localhost/citydata/api/rest/');
+app.constant('API_URL', 'http://project2.local/citydata/api/rest/');
 
 
 
