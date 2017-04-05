@@ -319,23 +319,23 @@ class PublicController extends AbstractController
 
         $services  = Service::where('id', $service)->get();
         foreach($services as $s){
-          if(empty($s->areas->find($area)))
-          {
-              $s->areas()->sync(array($area));
-              $s->areas()->updateExistingPivot($area, array('number' => 1), false);
-              $number = 1;
-          }
-          else{
-            $areas = $s->areas->find($area);
-
-            $number = $areas->pivot->number;
-            $number = $number +1;
-            $s->areas()->updateExistingPivot($area, array('number' => $number), false);
-          }
+          // if(empty($s->areas->find($area)))
+          // {
+          //     $s->areas()->sync(array($area));
+          //     $s->areas()->updateExistingPivot($area, array('number' => 1), false);
+          //     $number = 1;
+          // }
+          // else{
+          //   $areas = $s->areas->find($area);
+          //
+          //   $number = $areas->pivot->number;
+          //   $number = $number +1;
+          //   $s->areas()->updateExistingPivot($area, array('number' => $number), false);
+          // }
 
         }
 
-        return $this->json_success($res, 200, json_encode($number));
+        return $this->json_success($res, 200, json_encode($g));
       }
       catch (ModelNotFoundException $e) {
         return $this->json_error($res, 500, json_encode("Erreur dans la base"));
@@ -352,12 +352,12 @@ class PublicController extends AbstractController
       $result = array();
       $resultat = array();
 
-      try 
+      try
       {
           foreach($data as $d)
           {
               $result = Geographical_data::where("id_area", "=", $d["id_area"])->get();
-              
+
               foreach($result as $r)
               {
                 $family = Service::where("id", "=", $r->id_service)->firstOrFail();
