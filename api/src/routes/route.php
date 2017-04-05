@@ -57,8 +57,8 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 *
 * @api {get} /families/{id}  Accès à une ressource family
 *
-* @apiDescription Accès à une ressource de type family
-* permet d'accéder à la représentation de la ressource family désignée.
+* @apiDescription Accès à une ressource de type family.<br/>
+* Permet d'accéder à la représentation de la ressource family désignée.
 * Retourne une représentation json de la ressource, incluant son id, description et color.
 *
 *
@@ -378,6 +378,7 @@ $app->group('/families', function (){
 * @apiVersion 0.1.0
 *
 * @api {post} /services  Création d'une ressource service
+* @apiPermission admin
 *
 * @apiDescription Création d'une ressource de type Service
 * Le service est ajouté dans la base, son id est créé.
@@ -416,6 +417,7 @@ $app->group('/families', function (){
 * @apiVersion 0.1.0
 *
 * @api {put} /services/{id} Modification d'un service
+* @apiPermission admin
 *
 * @apiDescription Modification d'un service désigné
 *
@@ -449,6 +451,7 @@ $app->group('/families', function (){
 * @apiVersion 0.1.0
 *
 * @api {delete} /services/{id} Suppression d'un service
+* @apiPermission admin
 *
 * @apiDescription Supprimer un service
 * Supprimer un service dans la base
@@ -630,8 +633,6 @@ $app->group('/services', function (){
  * @apiError (Erreur : 404) NotFound No query results
  */
 
-/* getNumberServicesByAreas return => nothing ? */
-
 /**
  * @apiGroup Areas
  * @apiName getDetailsByArea
@@ -723,8 +724,6 @@ $app->group('/services', function (){
  * @apiError (Erreur : 404) NotFound No query results
  */
 
-/* getInformationByArea return => NULL ? */
-
 
 $app->group('/areas', function (){
       $this->get('', PublicController::class. ':getAreas')->setName('listAreas');
@@ -735,9 +734,133 @@ $app->group('/areas', function (){
       $this->get('/{id}/information', PublicController::class. ':getInformationByArea')->setName('informationByArea');
 });
 
+/**
+* @apiGroup Families
+* @apiName DeleteFamily
+* @apiVersion 0.1.0
+*
+* @api {delete} admin/families/{id} Suppression d'une famille
+* @apiPermission admin
+*
+* @apiDescription Supprimer une famille
+* Supprimer une famille dans la base
+*
+* @apiParam {Number} id Identifiant unique de la famille
+*
+* @apiSuccessExample {json} exemple de réponse en cas de succès
+*     HTTP/1.1 404 Deleted
+*     {
+*           "Deletion done"
+*     }
+*
+* @apiError (Erreur : 404) NotFound No query results
+*
+* @apiErrorExample {json} exemple de réponse en cas d'erreur
+*     HTTP/1.1 404 Not Found
+*     {
+*           "Error" : "Id not found"
+*     }
+*
+*/
+
 $app->group('/admin', function (){
       $this->delete('/families/{id}', PrivateController::class. ':deleteFamily')->setName('removeFamily');
 });
+
+/**
+* @apiGroup Geographical-data
+* @apiName AddGeographicalData
+* @apiVersion 0.1.0
+*
+* @api {post} /geographical-data  Création d'une ressource geographical-data
+* @apiPermission admin
+*
+* @apiDescription Création d'une ressource de type Geographical-data
+* La ressource est ajouté dans la base, son id est créé.
+* La longitude, latitude, description, id_area et id_service doivent être fournis
+*
+*
+* @apiParam  (request parameters) {String} longitude Longitude de la donnée géoraphique
+* @apiParam  (request parameters) {String} latitude Latitude de la donnée géoraphique
+* @apiParam  (request parameters) {String} description Description de la donnée géoraphique
+* @apiParam  (request parameters) {Number} id_area Identifiant de l'area de la donnée géoraphique
+* @apiParam  (request parameters) {Number} id_service Identifiant du service de la donnée géoraphique
+* @apiHeader (request headers) {String} Content-Type:=application/json format utilisé pour les données transmises
+*
+*
+* @apiParamExample {request} exemple de paramètres
+*     {
+*           "longitude"             : "6.160913499999992",
+*           "latitude"              : "48.6849702",
+*           "description"           : "Supermarchés Match",
+*           "id_area"               : 12,
+*           "id_service"            : 2
+*     }
+*
+*
+* @apiSuccess (Réponse : 201) {json} service représentation json du nouveau service
+*
+* @apiSuccessExample {response} exemple de réponse en cas de succès
+*     {
+*           "id"                    : "1"
+*           "longitude"             : "6.160913499999992",
+*           "latitude"              : "48.6849702",
+*           "description"           : "Supermarchés Match",
+*           "id_area"               : 12,
+*           "id_service"            : 2
+*     }
+*
+* @apiError (Réponse : 500) InternalServerError Erreur interne du serveur.
+*
+*/
+
+/**
+ * @apiGroup Geographical-data
+ * @apiName GetGeographicalDataByService
+ * @apiVersion 0.1.0
+ *
+ * @api {get} /geographical-data/services/{id} Accès à une table de données géographique d'un service désigné
+ *
+ * @apiDescription Accès à une table de données géographique d'un service désigné.<br/>
+ * Retourne cette table, incluant un ensemble de ressources de type geographical-data avec leurs id,
+ * longitude, latitude, description, id_area et id_service.
+ *
+ * @apiParam {Number} id Identifiant unique de la donnée géoraphique
+ *
+ * @apiSuccess  (request parameters) {Number} id Identifiant de la donnée géoraphique
+ * @apiSuccess  (request parameters) {String} longitude Longitude de la donnée géoraphique
+ * @apiSuccess  (request parameters) {String} latitude Latitude de la donnée géoraphique
+ * @apiSuccess  (request parameters) {String} description Description de la donnée géoraphique
+ * @apiSuccess  (request parameters) {Number} id_area Identifiant de l'area de la donnée géoraphique
+ * @apiSuccess  (request parameters) {Number} id_service Identifiant du service de la donnée géoraphique
+ *
+ * @apiSuccess (Succès : 200) {Object[]} table Table de données géographique (geographical-data)
+ *
+ * @apiSuccessExample {json} exemple de réponse en cas de succès
+ *     HTTP/1.1 200 OK
+ *
+      [
+            {
+                  "id": 4,
+                  "longitude": "6.163000499999953",
+                  "latitude": "48.6960295",
+                  "description": "Boulangerie Pâtisserie Seckinger",
+                  "id_area": 8,
+                  "id_service": 6
+            },
+            {
+                  "id": 5,
+                  "longitude": "6.166817499999979",
+                  "latitude": "48.6853999",
+                  "description": "La Place Du Pain",
+                  "id_area": 13,
+                  "id_service": 6
+            }
+      ]
+ *
+ *
+ * @apiError (Erreur : 404) NotFound No query results
+ */
 
 $app->group('/geographical-data', function (){
       $this->post('', PublicController::class. ':addGeographicalData');
