@@ -317,8 +317,8 @@ class PublicController extends AbstractController
       try {
         $g->save();
 
-        $services  = Service::where('id', $service)->get();
-        foreach($services as $s){
+        // $services  = Service::where('id', $service)->get();
+        // foreach($services as $s){
           // if(empty($s->areas->find($area)))
           // {
           //     $s->areas()->sync(array($area));
@@ -333,7 +333,7 @@ class PublicController extends AbstractController
           //   $s->areas()->updateExistingPivot($area, array('number' => $number), false);
           // }
 
-        }
+        // }
 
         return $this->json_success($res, 200, json_encode($g));
       }
