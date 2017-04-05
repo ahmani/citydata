@@ -1,0 +1,10 @@
+{
+  "name": "CityData",
+  "version": "0.1.0",
+  "description": "CityData Private API Documentation",
+  "title": "Documentation",
+  "template": {
+  	"withCompare": true,
+  	"withGenerator": true
+  }
+}
